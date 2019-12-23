@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h2>{{firstName+' '+lastName}}</h2>
+
+    <h2>{{getFullName()}}</h2>
+
+    <!-- 计算属性，后面不需要加() -->
+    <h2>{{fullName}}</h2>
+  </div>
+
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        firstName: 'Kobe',
+        lastName: 'Bryant'
+      },
+      // 计算属性
+      // methods和计算属性都可以实现我们的功能，但计算属性会进行缓存，如果使用多次，计算属性只会调用一次。
+      computed: {
+        fullName: function () {
+          return this.firstName + ' ' + this.lastName
+        }
+      },
+      methods: {
+        getFullName: function () {
+          return this.firstName + ' ' + this.lastName
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
