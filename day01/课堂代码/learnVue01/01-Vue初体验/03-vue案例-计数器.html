@@ -13,13 +13,18 @@
     <h2>当前计数：{{counter}}</h2>
     <button v-on:click='add'>+</button>
     <button v-on:click='sub'>-</button>
+
+    <h2>{{message}}</h2>
+    <button v-on:click="reverseMessage">反转消息</button>
   </div>
+
 
   <script src="../js/vue.js"></script>
   <script>
     //proxy
     const obj = {
-      counter: 0
+      counter: 0,
+      message: 'Hello Vue'
     }
     const app = new Vue({
       el: '#app',
@@ -32,6 +37,9 @@
         sub: function () {
           console.log('sub被执行');
           this.counter--
+        },
+        reverseMessage: function () {
+          this.message = this.message.split('').reverse().join('')
         }
       }
     })
