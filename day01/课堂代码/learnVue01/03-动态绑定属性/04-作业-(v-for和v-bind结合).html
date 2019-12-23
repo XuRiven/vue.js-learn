@@ -16,31 +16,24 @@
 
 <body>
   <div id="app">
-    <h2 :class="{active:isActive,line :isLine}">{{message}}</h2>
-    <h2 :class="getClass()">{{message}}</h2>
-    <button v-on:click="change">按钮</button>
+    <ul>
+      <li :class="{active:isRed}" v-on:click="changeColor" v-for="(m,index) in movies">{{index}}-->{{m}}</li>
+    </ul>
   </div>
 
   <script>
     const app = new Vue({
       el: '#app',
       data: {
-        message: 'hello',
-        isActive: true,
-        isLine: true
+        movies: ['被解救的姜戈', '低俗小说', '杀死比尔', '无耻混蛋'],
+        isRed: true
       },
       methods: {
-        change: function () {
-          this.isActive = !this.isActive
-        },
-        getClass: function () {
-          return {
-            active: this.isActive,
-            line: this.isLine
-          }
+        changeColor: function () {
+          this.isRed = !this.isRed
         }
       }
-    })
+    });
   </script>
 </body>
 
