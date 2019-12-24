@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+  </div>
+  <script>
+    const name = 'kobe';
+    const num = '24';
+    const height = '196';
+
+    //ES5写法
+    /* const obj={
+      name:name,
+      num:num,
+      height:height
+    }
+    console.log(obj); */
+
+    //ES6写法|
+    const obj = {
+      name,
+      num,
+      height
+    }
+    console.log(obj);
+
+
+
+    //ES5写法
+    /* const obj2={
+      eat:function(){
+
+      },
+      drink:function(){
+
+      }
+    } */
+
+    //ES6写法
+    const obj2 = {
+      eat() {
+
+      },
+      drink() {
+
+      }
+    }
+  </script>
+</body>
+
+</html>
