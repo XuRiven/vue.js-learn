@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h2>{{fullname}}</h2>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        firstName: 'Kobe',
+        lastName: 'Bryant'
+      },
+      computed: {
+        //计算属性一般没有set方法
+        /* fullname: {
+          get: function () {
+            return this.firstName + ' ' + this.lastName
+          }, */
+        
+        //计算属性可以简写成一下形式，直接调用了get方法，所以引用的时候不需要加()
+        fullname: function () {
+          return this.firstName + ' ' + this.lastName
+        }
+
+        //set方法一般用不到
+        /* set: function (name) {
+          const newName=name.split(' ');
+          this.firstName=newName[0];
+          this.lastName=newName[1];
+        } */
+      }
+
+    });
+  </script>
+</body>
+
+</html>

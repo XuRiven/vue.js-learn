@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h2>{{getFullName()}}</h2>
+    <h2>{{getFullName()}}</h2>
+    <h2>{{getFullName()}}</h2>
+    <h2>{{getFullName()}}</h2>
+    <h2>{{fullName}}</h2>
+    <h2>{{fullName}}</h2>
+    <h2>{{fullName}}</h2>
+    <h2>{{fullName}}</h2>
+
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        firstName:'Kobe',
+        lastName:'James'
+      },
+      methods: {
+        getFullName:function(){
+          console.log('methods方法被调用了');
+          return this.firstName+' '+this.lastName;
+        }
+      },
+      computed: {
+        fullName:function(){
+        /* 
+          计算属性是基于它们的响应式依赖进行缓存的
+          只在相关响应式依赖发生改变时它们才会重新求值
+          所以这里只会打印一次
+         */          
+          console.log('computed方法被调用了');
+          return this.firstName+' '+this.lastName;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
