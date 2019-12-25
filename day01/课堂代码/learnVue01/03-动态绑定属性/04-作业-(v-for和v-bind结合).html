@@ -17,7 +17,8 @@
 <body>
   <div id="app">
     <ul>
-      <li :class="{active:isRed}" v-on:click="changeColor" v-for="(m,index) in movies">{{index}}-->{{m}}</li>
+      <li :class="{active:index===currentIndex}" @click="changeColor(index)" v-for="(m,index) in movies">{{index}}.{{m}}
+      </li>
     </ul>
   </div>
 
@@ -26,11 +27,11 @@
       el: '#app',
       data: {
         movies: ['被解救的姜戈', '低俗小说', '杀死比尔', '无耻混蛋'],
-        isRed: true
+        currentIndex: 0
       },
       methods: {
-        changeColor: function () {
-          this.isRed = !this.isRed
+        changeColor(index) {
+          this.currentIndex = index
         }
       }
     });
