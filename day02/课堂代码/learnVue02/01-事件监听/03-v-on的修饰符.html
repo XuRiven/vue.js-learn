@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 1、 .stop修饰符  -->
+    <!-- 点解button里的click不会触发div里的click监听 -->
+    <div @click="divClick">
+      kobebryant
+      <button @click.stop="btnClick">按钮</button>
+    </div>
+
+    <!-- 2、 .prevent修饰符 -->
+    <br />
+    <form action="baidu">
+      <input type="submit" value="submit" @click.prevent="submitValues">
+    </form>
+
+    <!--3. .监听某个键盘的键帽-->
+    <!--@keyup每当键盘弹起来一次监听一次 .enter只有按下回车后才会监听 -->
+    <input type="text" @keyup.enter="keyup">
+
+    <!--4. .once修饰符 按钮只有在第一次点击的时候会监听-->
+    <button @click.once="onceClick">onceButton</button>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+
+      },
+      methods: {
+        divClick() {
+          console.log('divClick');
+        },
+        btnClick() {
+          console.log('btnClick');
+        },
+        submitValues() {
+          console.log('submitValue');
+        },
+        keyup(){
+          console.log('keyup');
+        },
+        onceClick(){
+          console.log('onceClick');
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
