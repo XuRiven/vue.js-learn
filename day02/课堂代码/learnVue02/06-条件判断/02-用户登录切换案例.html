@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 案例小问题:如果我们在有输入内容的情况下，切换了类型，我们会发现文字依然显示之前的输入的内容。 -->
+    <!-- 问题分析:这是因为Vue在进行DOM渲染时，出于性能考虑，会尽可能的复用已经存在的元素，而不是重新创建新的元素
+                 在下面案例中，Vue内部会发现原来的input元素不再使用，直接作为else中的input来使用了 -->
+    <!-- 问题解决:如果我们不希望Vue出现类似复用问题，可以给对应的Input添加Key,并且保证key不相同。 -->
+    <span v-if="isUser">
+      <label for="username">用户名称</label>
+      <input type="text" id="username" placeholder="用户名称" key="username-input">
+    </span>
+    <span v-else>
+      <label for="email">用户邮箱</label>
+      <input type="text" id="email" placeholder="用户邮箱" key="email-input">
+    </span>
+    <button @click="changeState">切换</button>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        isUser: true
+      },
+      methods: {
+        changeState() {
+          this.isUser = !this.isUser
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

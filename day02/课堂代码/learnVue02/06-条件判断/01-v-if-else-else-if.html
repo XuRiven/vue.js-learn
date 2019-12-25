@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h2 v-if="isShow">当isShow为true显示我</h2>
+    <h2 v-else>当isShow为false显示我</h2>
+
+    <br/>
+    <p v-if="socre>=90">优秀</p>
+    <p v-else-if="socre>=80">良好</p>
+    <p v-else-if="socre>=60">及格</p>
+    <p v-else>不及格</p>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        isShow:true,
+        socre:99
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>

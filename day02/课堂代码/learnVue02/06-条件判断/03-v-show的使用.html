@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- v-if和v-show区别 -->
+    <!-- 当条件为false时，包含v-if的指令根本就不会存在DOM中
+         而v-show只是给我们的元素添加了一个行内样式: display:none -->
+
+    <!--v-if和v-show的使用  -->
+    <!-- 一般来说,v-if有更高的切换开销，而v-show又更高的初始渲染开销，
+         因此，如果需要频繁的切换，则使用v-show，如果在运行时条件很少改变，则使用v-if较好。 -->
+    <h2 id="if" v-if="isShow">{{message}}</h2>
+    <h2 id="show" v-show="isShow">{{message}}</h2>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message:'kobe bryant',
+        isShow:true
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>
