@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!--1、遍历数组无索引  -->
+    <ul>
+      <li v-for="item in movies">{{item}}</li>
+    </ul>
+
+    <!--2、遍历数组加索引  -->
+    <ul>
+      <li v-for="(item,index) in movies">{{index+1}}{{item}}</li>
+    </ul>
+
+    
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        movies: ['低俗小说', '被解救的姜戈', '无耻混蛋', '落水狗'],
+        object: {
+          name: 'xuriven',
+          age: 24,
+          height: '183cm'
+        }
+      },
+      methods: {
+      }
+    });
+  </script>
+</body>
+
+</html>

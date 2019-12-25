@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!--1、遍历对象，如果只是获取一个值，那么获取到的是value  -->
+    <ul>
+      <li v-for="value in object">{{value}}</li>
+    </ul>
+
+    <!--2、遍历对象加索引和键  -->
+    <ul>
+      <li v-for="(value,key,index) in object">{{index}}.{{key}}:{{value}}</li>
+    </ul>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        movies: ['低俗小说', '被解救的姜戈', '无耻混蛋', '落水狗'],
+        object: {
+          name: 'xuriven',
+          age: 24,
+          height: '183cm'
+        }
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>
