@@ -1,8 +1,7 @@
-const app=new new Vue({
-  el:'#app',
-  data: {
-		movies: [
-			{
+const app = new Vue({
+	el: '#app',
+	data: {
+		movies: [{
 				id: 1,
 				name: '《算法导论》',
 				date: '2006-9',
@@ -34,28 +33,52 @@ const app=new new Vue({
 	},
 	// 过滤器
 	filters: {
-		showPrice(price){
-			return '￥'+price.toFixed(2)
+		showPrice(price) {
+			return '￥' + price.toFixed(2)
 		}
 	},
 	methods: {
-		subBook(index){
+		subBook(index) {
 			this.movies[index].count--
 		},
-		addBook(index){
+		addBook(index) {
 			this.movies[index].count++
 		},
-		removeHandler(index){
-			this.movies.splice(index,1)
+		removeHandler(index) {
+			this.movies.splice(index, 1)
 		}
 	},
 	computed: {
-		totalPrice(){
-			let result=0; 
+		totalPrice() {
+			// 1.普通的for循环
+			/* let result=0; 
 			for(let i=0;i<this.movies.length;i++){
 				result+=this.movies[i].price * this.movies[i].count
 			}
-			return result;
+			return result; */
+
+
+			//2.for(let i in this.movies)
+			/* 	let result=0;
+				for(let i in this.movies ){
+					const book=this.movies[i]
+					result+=book.price*book.count
+				}
+				return result */
+
+			//3.for(let i of this.movies)
+			/* let result = 0
+			for (let i of this.movies) {
+				result += i.price * i.count
+			}
+			return result */
+
+			// 4.高阶函数
+			return this.movies.reduce(function (previousValue, movie) {
+				return previousValue + movie.price * movie.count
+			}, 0)
 		}
 	}
+
 })
+
