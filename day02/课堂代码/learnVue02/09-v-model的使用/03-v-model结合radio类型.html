@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 两个radio要是想互斥，需要加两个一样的name属性，如果加了一样的v-model，就不用加name属性了 -->
+    <!-- label中for的作用:点击label时会自动聚焦到对应id的input上面 -->
+    <label for="male">男</label>
+    <input type="radio" id="male" value="男" v-model="sex">
+    <label for="female">女</label>
+    <input type="radio" id="female" value="女" v-model="sex">
+    <h2>{{sex}}</h2>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        sex: ''
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>

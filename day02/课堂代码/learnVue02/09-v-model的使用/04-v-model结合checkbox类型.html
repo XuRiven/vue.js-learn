@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <label for="agree">
+      <input type="checkbox"  id="agree" v-model="isAgree"> 同意协议
+    </label>
+    <br>
+    <button :disabled="!isAgree">next</button>
+    <br>
+    <input type="checkbox" value="kobe" v-model="name" >kobe
+    <input type="checkbox" value="james" v-model="name" >james
+    <input type="checkbox" value="rose" v-model="name" >rose
+    <input type="checkbox" value="tmac" v-model="name" >tmac
+    <input type="checkbox" value="jordan" v-model="name" >jordan
+    <h2>你选择的明星有:{{name}}</h2>
+    <!-- 值绑定:开发过程中value是服务器传递过来的，不能写死 -->
+    <label :for="item" v-for="item in originNames">
+      <input type="checkbox" :value="item"  :id="item" v-model="name">{{item}}
+    </label>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        isAgree:false,
+        name:[],
+        originNames:['kobe','james','jordan','durant','curry','paul']
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>

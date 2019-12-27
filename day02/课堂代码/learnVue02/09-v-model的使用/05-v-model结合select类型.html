@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <select v-model="name" >
+      <option value="kobe">kobe</option>
+      <option value="james">james</option>
+      <option value="jordan">jordan</option>
+      <option value="durant">durant</option>
+    </select>
+    <h2>你选择的是:{{name}}</h2>
+
+
+    <select v-model="names" v-model="names" multiple>
+      <option value="kobe">kobe</option>
+      <option value="james">james</option>
+      <option value="jordan">jordan</option>
+      <option value="durant">durant</option>
+    </select>
+    <h2>你选择的是:{{names}}</h2>
+  </div>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        name:'kobe',
+        names:[]
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>
