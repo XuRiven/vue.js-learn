@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <cpn></cpn>
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>当前计数:{{counter}}</h2>
+      <button @click="increment">+</button>
+      <button @click="decrement">-</button>
+    </div>    
+  </template>
+  <script>
+    Vue.component('cpn', {
+      template:'#cpn',
+      /* 
+        为什么data在组件中是一个函数？
+        1.首先，如果不是一个函数，vue就会直接报错
+        2.其次，原因在于vue让每个组件对象都返回一个新的对象，因为如果是同一个对象，组件在多次使用后会相互影响
+      */
+      data () {
+        return {
+          counter:0
+        }
+      },
+      methods: {
+        increment(){
+          this.counter++
+        },
+        decrement(){
+          this.counter--
+        }
+      }
+    })
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>

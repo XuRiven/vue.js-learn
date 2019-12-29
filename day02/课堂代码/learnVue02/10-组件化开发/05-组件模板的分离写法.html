@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <cpn></cpn>
+  </div>
+  <!-- 1.script标签，类型必须是 -->
+  <script type="text/x-template" id="cpn">
+    <div>
+      <h2>我是组件模板</h2>
+    </div>
+  </script>
+  
+  <!-- 2.使用template标签 -->
+  <template id="cpn">
+    <div>
+      <h2>我是组件模板</h2>
+    </div>
+  </template>
+  <script>
+    // 注册一个全局组件
+    Vue.component('cpn',{
+      // 直接使用template中的id
+      template:'#cpn'
+    })
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <cpn></cpn>
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>我是一个组件模板</h2>
+      <p>我是组件模板里面的数据{{message}}</p>
+    </div>
+  </template>
+  <script>
+    Vue.component('cpn', {
+      template: '#cpn',
+      /* 
+      组件对象也有一个data属性，(也可以有methods等属性)
+      只是这个data属性必须是一个函数，而且这个函数返回一个对象，对象内部保存着数据
+      */
+      data() {
+        return {
+          message: 'kobe bryant'
+        }
+      }
+    })
+    const app = new Vue({
+      el: '#app',
+      data: {
+        /* 我们发现不能访问，而且即使可以访问，如果将所有的数据都放在Vue实例中，Vue实例就会变的非常臃肿。 */
+        message:'kobe bryant'
+      },
+      methods: {}
+    });
+  </script>
+</body>
+
+</html>

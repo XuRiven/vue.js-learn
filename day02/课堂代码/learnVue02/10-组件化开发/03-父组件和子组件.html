@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <cpn2></cpn2>
+  </div>
+
+  
+  <script>
+    // 创建一个子组件构造器
+    const cpnC1 = Vue.extend({
+      template: `
+      <div>
+      <h2>标题1</h2>
+      <p>kobe bryant</p>
+      </div>`
+    })
+
+    // 创建一个父组件构造器
+    const cpnC2 = Vue.extend({
+      template: `
+      <div>
+      <h2>标题2</h2>
+      <p>james harden</p>
+      <cpn1></cpn1>
+      </div>`,
+      // 在cpnC2中组测cpnC1，在上方template中使用cpn1标签
+      components: {
+        cpn1: cpnC1
+      }
+    })
+
+    // root组件
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      components: {
+        cpn2: cpnC2
+      }
+    });
+  </script>
+</body>
+
+</html>
