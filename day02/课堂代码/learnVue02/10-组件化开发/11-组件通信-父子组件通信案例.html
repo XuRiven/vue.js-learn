@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <cpn :num1="number1" :num2="number2"
+          @num1change="num1change"
+          @num2change="num2change"
+    />
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>prop:{{num1}}</h2>
+      <h2>data:{{dNumber1}}</h2>
+      <!-- <input type="text" v-model="dNumber1"> -->
+      <input type="text" :value="dNumber1" @input="num1Input">
+
+      <h2>prop:{{num2}}</h2>
+      <h2>data:{{dNumber2}}</h2>
+      <!-- <input type="text" v-model="dNumber1"> -->
+      <input type="text"  :value="dNumber2" @input="num2Input" >
+    </div>
+  </template>
+  <script>
+    const cpn = {
+      template: "#cpn",
+      props: {
+        num1: Number,
+        num2: Number
+      },
+      data() {
+        return {
+          dNumber1: this.num1,
+          dNumber2: this.num2
+        }
+      },
+      methods:{
+        num1Input(event){
+          // 1.将input中的value赋值到dnumber中
+          this.dNumber1=event.target.value;
+          // 2.为了让父组件可以修改值，发出一个事件
+          this.$emit('num1change', this.dNumber1)
+          // 3.同时修改dnumber2的值
+          this.dNumber2=this.dNumber1*100;
+          this.$emit('num2change',this.dNumber2)
+
+        },
+        num2Input(event){
+          this.dNumber2=event.target.value;
+          this.$emit('num2change', this.dNumber2)
+
+          this.dNumber1=this.dNumber2/100;
+          this.$emit('num1change', this.dNumber1)
+        }
+      }
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+        number1: 1,
+        number2: 2
+      },
+      methods: {
+        num1change(value){
+          this.number1=parseInt(value)
+        },
+        num2change(value){
+          this.number2=parseInt(value)
+        }
+      },
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+
+</html>
