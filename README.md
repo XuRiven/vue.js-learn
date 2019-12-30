@@ -751,6 +751,7 @@
     </div>
 
     <!-- 2、 .prevent修饰符 -->
+    <!-- 提交事件不再重载页面 -->
     <br />
     <form action="baidu">
       <input type="submit" value="submit" @click.prevent="submitValues">
@@ -1398,7 +1399,7 @@ console.log(total);
       </div>`
     })
     // 2、注册组件，并且定义组件标签的名称:my-cpn
-    // Vue.component('my-cpn', cpn) //当我们调用Vue.component()注册组件时，组件注册是全局的，这意味着该组件可以在任意vue实例下使用
+    // Vue.component('my-cpn', cpn) //当我们调用Vue.component()注册组件时，组件注册是全局的，这意味	  着该组件可以在任意vue实例下使用
 
     // 疑问：怎么注册的组件才是局部组件？
 
@@ -1540,6 +1541,10 @@ console.log(total);
       el: '#app',
       data: {},
       methods: {},
+      // 注册局部组件
+      components: {
+        template:'#cpn'
+      }
     });
   </script>
 ```
