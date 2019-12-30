@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 在父组件中，通过v-on来监听子组件事件 -->
+    <cpn @item-click="cpnClick"></cpn>
+  </div>
+
+  <template id="cpn">
+    <div>
+      <button v-for="item in categories" @click="btnClick(item)">{{item.name}}</button>
+    </div>
+  </template>
+  <script>
+    // 1.子组件
+    const cpn={
+      template:"#cpn",
+      data () {
+        return {
+          categories:[
+            {id:'a',name:'热门推荐'},
+            {id:'b',name:'家用家电'},
+            {id:'c',name:'手机数码'},
+            {id:'c',name:'电脑办公'}
+          ]
+          
+        }
+      },
+      methods: {
+        btnClick(item){
+          // 子组件向父组件传递值,通过$emit()来触发事件,发送事件名字:item-click,传递的参数:item
+          this.$emit('item-click', item)
+          console.log(item.name);
+        }
+      }
+    }
+
+    // 2.父组件
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      components: {
+        cpn
+      },
+      methods:{
+        // 接受子组件传递过来的item
+        cpnClick(item){
+          console.log('aa',item);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
