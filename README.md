@@ -1632,6 +1632,183 @@ console.log(total);
   </script>
 ```
 
+## 10.8. 08-组件通信-父组件向子组件传递数据
+
+```html
+<body>
+  <div id="app">
+    <!-- 必须用v-bind来传递数据，(简写成 :) -->
+    <cpn :cmovies='movies' :cmessage='message'></cpn>
+  </div>
+  <template  id="cpn">
+    <div>
+      <ul v-for='(movie,index) in cmovies'>
+        <li>{{index+1}}.{{movie}}</li>
+      </ul>
+      <h2>{{cmessage}}</h2>
+    </div>
+  </template>
+  <script>
+    const cpn={
+      template:'#cpn',
+      // 在组件中，使用选项props来声明需要从父级接收到的数据。
+      // 方式一:传递字符串数组，数组中的字符串就是传递时的名称
+      // props: ['cmessage','cmovies'],
+
+      // 方式二:传递对象，对象可以设置传递时的类型，也可以设置默认值等
+      props:{
+        // 1.类型限制
+        // cmovies:Array,
+        // cmessage:String
+
+        // 2.提供一些默认值，以及必传值
+        cmessage:{
+          type:String,
+          required:false,
+          default:'default value'
+        },
+        cmovies:{
+          type:Array,
+          required:true,
+          default(){
+            return []
+          }
+        }
+      },
+      data () {
+        return {}
+      },
+      methods: {}
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message:'kobe bryant',
+        movies:['杀死比尔','星际穿越','低俗小说','白日焰火']
+      },
+      methods: {},
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+## 10.9. 09-组件通信-父传子(props驼峰标识)
+
+```html
+<body>
+  <div id="app">
+    <!-- 驼峰绑定写法- -->
+    <cpn :c-info="info" :my-childe-name-message="message" ></cpn>
+  </div>
+  
+  <template id="cpn">
+    <div>
+      <h2>{{cInfo}}</h2>
+      <h2>{{myChildeNameMessage}}</h2>
+    </div>
+  </template>
+
+  <script>
+    const cpn = {
+      template: '#cpn',
+      props: {
+        cInfo: {
+          type: Object,
+          default() {
+            return {}
+          }   
+        },
+        myChildeNameMessage:{
+          type:String,
+          default(){
+            return{}
+          }
+        }
+        
+      }
+    }
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+        info: {
+          name: 'kobe',
+          age: '24',
+          location: 'LosAngle'
+        },
+        message:'Django'
+      },
+      methods: {},
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+## 10.10. 10-组件通信-子传父(自定义事件)
+
+```html
+<body>
+  <div id="app">
+    <!-- 在父组件中，通过v-on来监听子组件事件 -->
+    <cpn @item-click="cpnClick"></cpn>
+  </div>
+
+  <template id="cpn">
+    <div>
+      <button v-for="item in categories" @click="btnClick(item)">{{item.name}}</button>
+    </div>
+  </template>
+  <script>
+    // 1.子组件
+    const cpn={
+      template:"#cpn",
+      data () {
+        return {
+          categories:[
+            {id:'a',name:'热门推荐'},
+            {id:'b',name:'家用家电'},
+            {id:'c',name:'手机数码'},
+            {id:'c',name:'电脑办公'}
+          ]
+          
+        }
+      },
+      methods: {
+        btnClick(item){
+          // 子组件向父组件传递值,通过$emit()来触发事件,发送事件名字:item-click,传递的参数:item
+          this.$emit('item-click', item)
+          console.log(item.name);
+        }
+      }
+    }
+
+    // 2.父组件
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      components: {
+        cpn
+      },
+      methods:{
+        // 接受子组件传递过来的item
+        cpnClick(item){
+          console.log('aa',item);
+        }
+      }
+    });
+  </script>
+</body>
+```
+
+
+
 
 
 
