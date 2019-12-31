@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../../../../js/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <cpn></cpn>
+    <cpn></cpn>
+    <!-- 添加ref属性 -->
+    <cpn ref="cpn3"></cpn>
+    <button @click="btnClick">按钮</button>
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>我是子组件</h2>
+    </div>
+  </template>
+  <script>
+    const cpn={
+      template:"#cpn",
+      methods:{
+        showMessage(){
+          console.log('showMessage');
+        }
+      },
+      data () {
+        return {
+          name:"我是子组件name"
+        }
+      }
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {
+        btnClick(){
+          /* 
+          1.this.$children
+          $children的缺陷：
+          通过$children访问子组件时，是一个数组类型，访问其中的子组件必须通过索引值。
+          但是当子组件过多，我们需要拿到其中一个时，往往不能确定它的索引值，甚至还可能会发生变化。
+          有时候，我们想明确获取其中一个特定的组件，这个时候就可以使用$refs
+          */
+          // console.log(this.$children[2].name);
+
+
+          /* 
+          2.this.$refs
+          $refs和ref指令通常是一起使用的。
+          首先，我们通过ref给某一个子组件绑定一个特定的ID。
+          其次，通过this.$refs.ID就可以访问到该组件了。
+          */
+          console.log(this.$refs.cpn3.name);
+        }
+      },
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+
+</html>
