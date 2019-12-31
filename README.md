@@ -1807,6 +1807,209 @@ console.log(total);
 </body>
 ```
 
+## 10.11. 11-组件通信案例
+
+```html
+<body>
+  <div id="app">
+    <cpn :num1="number1" :num2="number2"
+          @num1change="num1change"
+          @num2change="num2change"
+    />
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>prop:{{num1}}</h2>
+      <h2>data:{{dNumber1}}</h2>
+      <!-- <input type="text" v-model="dNumber1"> -->
+      <input type="text" :value="dNumber1" @input="num1Input">
+
+      <h2>prop:{{num2}}</h2>
+      <h2>data:{{dNumber2}}</h2>
+      <!-- <input type="text" v-model="dNumber1"> -->
+      <input type="text"  :value="dNumber2" @input="num2Input" >
+    </div>
+  </template>
+  <script>
+    const cpn = {
+      template: "#cpn",
+      props: {
+        num1: Number,
+        num2: Number
+      },
+      data() {
+        return {
+          dNumber1: this.num1,
+          dNumber2: this.num2
+        }
+      },
+      methods:{
+        num1Input(event){
+          // 1.将input中的value赋值到dnumber中
+          this.dNumber1=event.target.value;
+          // 2.为了让父组件可以修改值，发出一个事件
+          this.$emit('num1change', this.dNumber1)
+          // 3.同时修改dnumber2的值
+          this.dNumber2=this.dNumber1*100;
+          this.$emit('num2change',this.dNumber2)
+
+        },
+        num2Input(event){
+          this.dNumber2=event.target.value;
+          this.$emit('num2change', this.dNumber2)
+
+          this.dNumber1=this.dNumber2/100;
+          this.$emit('num1change', this.dNumber1)
+        }
+      }
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+        number1: 1,
+        number2: 2
+      },
+      methods: {
+        num1change(value){
+          this.number1=parseInt(value)
+        },
+        num2change(value){
+          this.number2=parseInt(value)
+        }
+      },
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+## 10.12. 12-组件访问-父访问子-children-refs
+
+```html
+<body>
+  <div id="app">
+    <cpn></cpn>
+    <cpn></cpn>
+    <!-- 添加ref属性 -->
+    <cpn ref="cpn3"></cpn>
+    <button @click="btnClick">按钮</button>
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>我是子组件</h2>
+    </div>
+  </template>
+  <script>
+    const cpn={
+      template:"#cpn",
+      methods:{
+        showMessage(){
+          console.log('showMessage');
+        }
+      },
+      data () {
+        return {
+          name:"我是子组件name"
+        }
+      }
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {
+        btnClick(){
+          /* 
+          1.this.$children
+          $children的缺陷：
+          通过$children访问子组件时，是一个数组类型，访问其中的子组件必须通过索引值。
+          但是当子组件过多，我们需要拿到其中一个时，往往不能确定它的索引值，甚至还可能会发生变化。
+          有时候，我们想明确获取其中一个特定的组件，这个时候就可以使用$refs
+          */
+          // console.log(this.$children[2].name);
+
+
+          /* 
+          2.this.$refs
+          $refs和ref指令通常是一起使用的。
+          首先，我们通过ref给某一个子组件绑定一个特定的ID。
+          其次，通过this.$refs.ID就可以访问到该组件了。
+          */
+          console.log(this.$refs.cpn3.name);
+        }
+      },
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+
+```
+
+## 10.13 13-组件访问-子访问父-parent-root(不常用)
+
+```html
+<body>
+  <div id="app">
+    <cpn></cpn>
+  </div>
+  <template id="cpn">
+    <div>
+      <ccpn></ccpn>
+    </div>
+  </template>
+  <template id="ccpn">
+    <div>
+      <h2>我是子组件</h2>
+      <button @click="btnClick">按钮</button>
+    </div>
+  </template>
+  <script>
+    
+    const ccpn={
+      template:"#ccpn",
+      methods: {
+        btnClick(){
+          // 访问父组件this.$parent
+          console.log(this.$parent);
+          console.log(this.$parent.name);
+          // 访问根组件this.$root
+          console.log(this.$root.name);
+          
+        }
+      }
+    }
+    const cpn={
+      template:"#cpn",
+      data () {
+        return {
+          name:"我是子组件Name"  
+        }
+      },
+      methods: {},
+      components: {
+        ccpn
+      }
+    }
+    
+    const app = new Vue({
+      el: '#app',
+      data: {
+        name:'我是父组件name'
+      },
+      methods: {},
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+
+
 
 
 
