@@ -45,6 +45,14 @@ module.exports = {
 
             2.图片大小大于limit
             如果大于13kb呢？会通过file-loader进行处理，但是我们的项目中并没有file-loader,所以，我们需要安装file-loader
+
+            3.图片文件处理 – 修改文件名称
+            我们可以在options中添加上如下选项：
+            img：文件要打包到的文件夹
+            name：获取图片原来的名字，放在该位置
+            hash:8：为了防止图片名称冲突，依然使用hash，但是我们只保留8位
+            ext：使用图片原来的扩展名
+
             */
             limit: 13000,
             name:'img/[name].[hash:8].[ext]'

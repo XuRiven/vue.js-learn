@@ -2315,6 +2315,281 @@ console.log(aaa.height);
 
 
 
+# 13.webpack的使用
+
+## 13.1. 01-webpack的起步
+
+**什么是webpack**
+
+从本质上来讲，webpack是一个现代的JavaScript应用的静态模块打包工具，通俗点说就是模块 和 打包。
+
+**打包如何理解呢？**
+
+* 理解了webpack可以帮助我们进行模块化，并且处理模块间的各种复杂关系后，打包的概念就非常好理解了。
+* 就是将webpack中的各种资源模块进行打包合并成一个或多个包(Bundle)。
+* 并且在打包的过程中，还可以对资源进行处理，比如压缩图片，将scss转成css，将ES6语法转成ES5语法，将TypeScript转成JavaScript等等操作。
+
+**准备工作**
+
+**文件和文件夹解析：**
+
+* dist文件夹：用于存放之后打包的文件
+* src文件夹：用于存放我们写的源文件
+  * main.js：项目的入口文件。具体内容查看下面详情。
+  * mathUtils.js：定义了一些数学工具函数，可以在其他地方引用，并且使用。具体内容查看下面的详情。
+* index.html：浏览器打开展示的首页html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+   <!-- 
+    bundle.js文件，是webpack处理了项目直接文件依赖后生成的一个js文件，我们只需要将这个js文件在index.html中引入即可
+    webpack ./src/main.js ./dist/bundle.js 
+  -->
+  <script src="./dist/bundle.js"></script>
+
+```
+
+* package.json：通过npm init生成的，npm包管理的文件
+
+```json
+{
+  "name": "meetwebpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^3.6.0"
+  }
+}
+
+```
+
+* mathUtils.js文件中的代码：
+
+```js
+function add(num1, num2) {
+  return num1 + num2
+}
+
+function mul(num1, num2) {
+  return num1 * num2
+}
+
+module.exports={
+  add,mul
+}
+```
+
+* main.js文件中的代码：
+
+```js
+// 1.使用commonjs模块化规范
+const {add,mul}=require('./mathUtils.js')
+console.log(add(10,20));
+console.log(mul(10,20));
+
+
+// 2.使用ES6模块化规范
+import {name,age,height} from "./info"
+console.log(name);
+console.log(age);
+
+```
+
+
+
+## 13.2. 02-webpack的配置
+
+**入口和出口**
+
+我们考虑一下，如果每次使用webpack的命令都需要写上入口和出口作为参数，就非常麻烦，有没有一种方法可以将这两个参数写到配置中，在运行时，直接读取呢？当然可以，就是创建一个webpack.config.js文件。
+
+```js
+const path=require('path')
+module.exports={
+  // 人口:可以是字符串/对象/数组，这里我们入口只有一个，所有写一个字符串即可
+  entry:'./src/main.js',
+  // 出口:通常是一个对象，里面至少包含两个重要属性，path和filename
+  output:{
+    path:path.resolve(__dirname,'dist'),//注意:path通常是一个绝对路径
+    filename:'bundle.js'
+  },
+}
+```
+
+**局部安装webpack**
+
+* 目前，我们使用的webpack是全局的webpack，如果我们想使用局部来打包呢？
+  * 因为一个项目往往依赖特定的webpack版本，全局的版本可能很这个项目的webpack版本不一致，导出打包出现问题。
+  * 所以通常一个项目，都有自己局部的webpack。
+* 第一步，项目中需要安装自己局部的webpack（npm install webpack@3.6.0 --save-dev）
+* 第二步，通过node_modules/.bin/webpack启动webpack打包 
+
+**package.json中定义启动**
+
+* 但是，每次执行都敲这么一长串有没有觉得不方便呢？
+
+  * OK，我们可以在package.json的scripts中定义自己的执行脚本。
+
+* package.json中的scripts的脚本在执行时，会按照一定的顺序寻找命令对应的位置。在里面添加一条"build": "webpack"
+
+  ```json
+  {
+    "name": "meetwebpack",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "webpack"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "webpack": "^3.6.0"
+    }
+  }
+
+  ```
+
+  ​
+
+  * 首先，会寻找本地的node_modules/.bin路径中对应的命令。
+  * 如果没有找到，会去全局的环境变量中寻找。
+  * 如何执行我们的build指令呢？(npm run build)
+
+****
+
+## **13.3**. 03-webpack的loader
+
+**什么是loader?**
+
+* loader是webpack中一个非常核心的概念。
+* webpack用来做什么呢？
+  * 在我们之前的实例中，我们主要是用webpack来处理我们写的js代码，并且webpack会自动处理js之间相关的依赖。
+  * 但是，在开发中我们不仅仅有基本的js代码处理，我们也需要加载css、图片，也包括一些高级的将ES6转成ES5代码，将TypeScript转成ES5代码，将scss、less转成css，将.jsx、.vue文件转成js文件等等。
+  * 对于webpack本身的能力来说，对于这些转化是不支持的。那怎么办呢？给webpack扩展对应的loader就可以啦。
+* loader使用过程：
+  * 步骤一：通过npm安装需要使用的loader
+  * 步骤二：在webpack.config.js中的modules关键字下进行配置
+
+
+
+**main.js**
+
+```js
+// 1.使用commonjs模块化规范
+const {add,mul}=require('./js/mathUtils')
+console.log(add(10,20));
+console.log(mul(10,20));
+
+
+// 2.使用ES6模块化规范
+import {name,age,height} from "./js/info"
+console.log(name);
+console.log(age);
+
+// 3.依赖css文件
+require('./css/normal.css')
+
+// 4.依赖less文件
+require('./css/special.less')
+document.writeln('<h2>hello kobe</h2>')
+```
+
+**webpack.config.js**
+
+```js
+const path = require('path')
+module.exports = {
+  entry: './src/main.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js',
+    // 在url前面加上对应的路径
+    publicPath:'dist/'
+  },
+  module: {
+    rules: [
+      /* 
+      css-loader只负责css文件加载
+      style-loader负责将样式添加到DOM中
+      使用多个loader时，是从右向左读取的 
+      */
+      {
+        test: /\.css$/,
+        use: [{
+          loader: "style-loader"
+        }, {
+          loader: "css-loader"
+        }]
+      },
+
+      {
+        test: /\.less$/,
+        use: [{
+          loader: "style-loader" // creates style nodes from JS strings
+        }, {
+          loader: "css-loader" // translates CSS into CommonJS
+        }, {
+          loader: "less-loader" // compiles Less to CSS
+        }]
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [{
+          loader: 'url-loader',
+          options: {
+            /* 
+            1.图片大小小于limit:
+            发现背景图是通过base64显示出来的
+            这也是limit属性的作用，当图片小于13kb时，对图片进行base64编码
+
+            2.图片大小大于limit
+            如果大于13kb呢？会通过file-loader进行处理，但是我们的项目中并没有file-loader,所以，我们需要安装file-loader
+            
+            3.图片文件处理 – 修改文件名称
+            我们可以在options中添加上如下选项：
+            img：文件要打包到的文件夹
+            name：获取图片原来的名字，放在该位置
+            hash:8：为了防止图片名称冲突，依然使用hash，但是我们只保留8位
+            ext：使用图片原来的扩展名
+            */
+            limit: 13000,
+            name:'img/[name].[hash:8].[ext]'
+          }
+          
+        }]
+      }
+    ]
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
