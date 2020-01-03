@@ -2010,7 +2010,308 @@ console.log(total);
 
 
 
+# 11.组件化高级
 
+## 11.1. 01-slot-插槽的基本使用
+
+```html
+<body>
+  <div id="app">
+    <cpn>
+      <!-- 这里在cpn模板里加个button，则这个button会代替slot标签，显示在页面 -->
+      <button>按钮</button>
+    </cpn>
+    <cpn></cpn>
+    <cpn></cpn>
+  </div>
+  <!-- template里面最外层一定要加个div标签 -->
+  <template id="cpn">
+    <div>
+      <h2>我是组件</h2>
+      <!-- 在子组件中，使用特殊的元素<slot>就可以为子组件开启一个插槽。
+           该插槽插入什么内容取决于父组件如何使用。
+           <slot>中的内容表示，如果没有在该组件中插入任何其他内容，就默认显示该内容
+      -->
+      <slot>我是插槽中默认显示的内容</slot>
+    </div>
+  </template>
+  <script>
+    const cpn = {
+      template: "#cpn"
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+
+
+## 11.2. 02-slot-具名插槽的使用
+
+```html
+<body>
+  <div id="app">
+    <cpn>
+      <button slot="center">标题</button>
+    </cpn>
+    <cpn>
+      <!-- 在需要替换的标签上指定slot的名字 -->
+      <h2 slot="left">替换左边内容</h2>
+      <h2 slot="right">替换右边边内容</h2>
+    </cpn>
+    
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>我是组件</h2>
+      <!-- 只要给slot元素一个name属性即可 -->
+      <slot name='left'>左边</slot>
+      <slot name='center'>中间</slot>
+      <slot name='right'>右边</slot>
+    </div>
+  </template>
+  <script>
+    const cpn = {
+      template: "#cpn"
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {},
+      methods: {},
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+
+
+## 11.3. 03-什么是编译的作用域
+
+```html
+<body>
+  <!-- 父组件模板的所有东西都会在父级作用域内编译；子组件模板的所有东西都会在子级作用域内编译。 -->
+  <div id="app">
+    <!-- 父组件里面使用isShow属性，虽然是在cpn模板上，但是也只调用父组件实例里的isShow属性 -->
+    <cpn v-show="isShow"></cpn>
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>我是模板</h2>
+      <!-- 子模板里调用isShow属性，使用的是自己的isShow属性 -->
+      <button v-show="isShow"></button>
+    </div>
+
+  </template>
+  <script>
+    const cpn = {
+      template: '#cpn',
+      data() {
+        return {
+          isShow: false
+        }
+      }
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+        isShow: true
+      },
+      methods: {},
+      components: {
+        cpn
+      }
+    });
+  </script>
+</body>
+```
+
+
+
+## 11.4. 04-作用域插槽案例
+
+```html
+<body>
+  <div id="app">
+    <cpn>
+      <!-- 父组件替换插槽的标签，但是内容由子组件来提供。 -->
+      <template slot-scope='slot'>
+        <span v-for="item in slot.data">{{item}} -</span>
+        <span v-for="item in slot.abc">{{item}} * -</span>
+        <!-- <span>{{slot.data.join(' * ')}}</span> -->
+      </template>
+    </cpn>
+  </div>
+  <template id="cpn">
+    <div>
+      <!-- 这个data可以随便取名，也可以叫abc,那上面就要改成slot.abc -->
+      <slot :data="pLanguages">
+        <ul>
+          <li v-for="item in pLanguages">{{item}}</li>
+        </ul>
+      </slot>
+
+      <slot :abc="pLanguages">
+        <ul>
+          <li v-for="item in pLanguages">{{item}}</li>
+        </ul>
+      </slot>
+    </div>
+  </template>
+  <script>
+    const cpn={
+      template:'#cpn',
+      data () {
+        return {
+          pLanguages:['JS','java','C#','C++','GO']
+        }
+      }
+    }
+    const app = new Vue({
+      el: '#app',
+      data: {
+
+      },
+      methods: {},
+      components: {
+        cpn 
+      }
+    });
+  </script>
+</body>
+
+```
+
+
+
+# 12.前端模块化
+
+## 12.1. 01-ES6的模块化
+
+index.html
+
+```html
+<body>
+<script src="aaa.js" type="module"></script>
+<script src="bbb.js" type="module"></script>
+<script src="mmm.js" type="module"></script>
+</body>
+```
+
+aaa.js
+
+```js
+var name = '小明'
+var age = 18
+var flag = true
+
+function sum(num1, num2) {
+  return num1 + num2
+}
+
+if (flag) {
+  console.log(sum(20, 30));
+}
+
+// 1.导出方式一:
+export {
+  flag, sum
+}
+
+// 2.导出方式二:
+export var num1 = 1000;
+export var height = 1.88
+
+
+// 3.导出函数/类
+export function mul(num1, num2) {
+  return num1 * num2
+}
+
+export class Person {
+  run() {
+    console.log('在奔跑');
+  }
+}
+
+/*
+注意:export default在同一个模块中，不允许同时存在多个。
+ 5.export default
+const address = '北京市'
+export {
+  address
+}
+export const address = '北京市'
+const address = '北京市'
+
+export default address
+ */
+
+export default function (argument) {
+  console.log(argument);
+}
+
+
+```
+
+bbb.js
+
+```js
+import {sum} from './aaa.js'
+
+var name = '小红'
+var flag = false
+
+console.log(sum(100, 200));
+```
+
+mmm.js
+
+```js
+// 1.导入的{}中定义的变量
+import {flag, sum} from "./aaa.js";
+
+if (flag) {
+  console.log('小明是天才, 哈哈哈');
+  console.log(sum(20, 30));
+}
+
+// 2.直接导入export定义的变量
+import {num1, height} from "./aaa.js";
+
+console.log(num1);
+console.log(height);
+
+// 3.导入 export的function/class
+import {mul, Person} from "./aaa.js";
+
+console.log(mul(30, 50));
+
+const p = new Person();
+p.run()
+
+// 4.导入 export default中的内容
+import addr from "./aaa.js";
+
+addr('你好啊');
+
+// 5.统一全部导入
+// import {flag, num, num1, height, Person, mul, sum} from "./aaa.js";
+
+import * as aaa from './aaa.js'
+
+console.log(aaa.flag);
+console.log(aaa.height);
+```
 
 
 
