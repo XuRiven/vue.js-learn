@@ -15,8 +15,8 @@
          1、v-bind绑定一个value属性
          2、v-on指令给当前元素绑定input事件
     -->
-    <!-- <input type="text" :value="message" @input="change" > -->
-    <input type="text" :value="message" @input="$event.target.value">
+    <input type="text" :value="message" @input="change" >
+    <!-- <input type="text" :value="message" @input="$event.target.value"> -->
     <h2>{{message}}</h2>
   </div>
   <script>

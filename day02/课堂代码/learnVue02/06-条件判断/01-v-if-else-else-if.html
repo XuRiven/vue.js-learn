@@ -15,9 +15,9 @@
     <h2 v-else>当isShow为false显示我</h2>
 
     <br/>
-    <p v-if="socre>=90">优秀</p>
-    <p v-else-if="socre>=80">良好</p>
-    <p v-else-if="socre>=60">及格</p>
+    <p v-if="score>=90">优秀</p>
+    <p v-else-if="score>=80">良好</p>
+    <p v-else-if="score>=60">及格</p>
     <p v-else>不及格</p>
   </div>
   <script>
@@ -25,7 +25,7 @@
       el: '#app',
       data: {
         isShow:true,
-        socre:99
+        score:99
       },
       methods: {}
     });
