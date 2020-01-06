@@ -1,11 +1,14 @@
 const path = require('path')
+const webpack=require('webpack')
+const HtmlWebpackPlugin=require('html-webpack-plugin')
+const UglifyjsWebpackPlugin=require('uglifyjs-webpack-plugin')
 module.exports = {
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
     // 在url前面加上对应的路径
-    publicPath:'dist/'
+    // publicPath:'dist/'
   },
   module: {
     rules: [
@@ -69,7 +72,24 @@ module.exports = {
             presets: ['es2015']
           }
         }
+      },
+      {
+        test: /\.vue$/,
+        use:['vue-loader']
       }
     ]
-  }
+  },
+  resolve:{
+    alias: {
+      'vue$':'vue/dist/vue.esm.js'
+    }
+  },
+  plugins:[
+    new webpack.BannerPlugin('最终版权归XuRiven所有'),
+    new HtmlWebpackPlugin({
+      template:'index.html'
+    }
+    ),
+    new UglifyjsWebpackPlugin()
+  ]
 }

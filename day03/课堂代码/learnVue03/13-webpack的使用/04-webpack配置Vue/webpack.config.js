@@ -69,7 +69,16 @@ module.exports = {
             presets: ['es2015']
           }
         }
+      },
+      {
+        test: /\.vue$/,
+        use:['vue-loader']
       }
     ]
+  },
+  resolve:{
+    alias: {
+      'vue$':'vue/dist/vue.esm.js'
+    }
   }
 }
