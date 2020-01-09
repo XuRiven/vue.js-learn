@@ -5,7 +5,7 @@ const UglifyjsWebpackPlugin=require('uglifyjs-webpack-plugin')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
     filename: 'bundle.js',
     // 在url前面加上对应的路径
     // publicPath:'dist/'
