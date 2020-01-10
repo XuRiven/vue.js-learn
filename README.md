@@ -2582,6 +2582,122 @@ module.exports = {
 
 
 
+## **13.4**. 04-webpack配置Vue
+
+index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+   <!-- 这里的app会被template模板里的内容替换掉 -->
+  <div id="app">
+    
+  </div>
+  </body>
+
+```
+
+
+
+main.js
+
+```js
+// 5.使用Vue进行开发
+/*
+  1.el和template模板的关系是什么呢？
+    在我们之前的学习中，我们知道el用于指定Vue要管理的DOM，可以帮助解析其中的指令、事件监听等等。
+    而如果Vue实例中同时指定了template，那么template模板的内容会替换掉挂载的对应el的模板。
+  2.这样做有什么好处呢？
+    这样做之后我们就不需要在以后的开发中再次操作index.html，只需要在template中写入对应的标签即可
+ */
+import Vue from 'vue'
+// import cpn from './vue/cpn'
+import cpn from './vue/Cpn.vue'
+new Vue({
+  template: '<cpn/>',
+  el: '#app',
+  data: {},
+  components: {
+    cpn
+  }
+})
+```
+
+Cpn.vue
+
+```vue
+<template>
+  <div>
+    <h2 class="title">{{message}}</h2>
+    <button>按钮</button>
+    <h2>{{name}}</h2>
+    <App/>
+    </div>
+</template>
+
+<script>
+
+/* 
+这里面不能简写，要写App.vue
+若想简写，需要在webpack.config.js的resolve中配置extensions:['.js'.'.vue']
+*/
+import App from './App.vue'
+
+export default {
+  data() {
+    return {
+      message: 'kobe',
+      name: 'james'
+    }
+  },
+  components: {
+    App
+  }
+}
+</script>
+
+<style>
+  .title{
+    color: green
+  }
+</style>
+```
+
+App.vue
+
+```vue
+<template>
+<div>
+  <h2>我是App组件标题</h2>
+  <p>我是App组件内容</p>
+  <h2>{{name}}</h2>
+</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      name:'我是App组件name'
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>
+```
+
+
+
 
 
 
