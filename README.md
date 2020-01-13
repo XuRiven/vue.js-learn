@@ -2698,6 +2698,146 @@ export default {
 
 
 
+# 14.箭头函数
+
+## 14.1. 01-箭头函数的基本使用
+
+```html
+<body>
+  <script>
+    // 1.定义函数的方式:function
+    const fun1 = function () {
+
+    }
+
+    // 2.对象字面量中定义函数
+    const obj = {
+      fun2() {
+
+      }
+    }
+
+    // 2.ES6中的箭头函数
+    // const fun3=(参数列表) =>{
+
+    // }
+    const fun3 = () => {
+      
+    }
+
+    fun3();
+  </script>
+</body>
+```
+
+
+
+## 14.2. 02-箭头函数参数和返回值
+
+```html
+<body>
+  <script>
+    // 1.参数问题
+    // 1.1.传递两个参数
+    const sum = (num1, num2) => {
+      return num1 + num2
+    }
+
+    // 1.2.传递一个参数(参数的括号可以省略)
+    const power = num => {
+      return nmu * num
+    }
+
+
+    // 2.函数中
+    // 2.1.函数代码块中有多个代码时
+    const test = () => {
+      console.log('kobe');
+      console.log('james');
+    }
+
+    // 2.2.函数代码块中只有一行代码时(可以省略花括号和return)
+    // const mul = (num1, num2) => {
+    //   return num1 * num2
+    // }
+    const mul = (num1, num2) => num1 * num2
+
+
+    // const demo = () => {
+    //   console.log('hello world');
+    // }
+    const demo = () => console.log('hello wold');
+  </script>
+</body>
+```
+
+
+
+## 14.3. 03-箭头函数中this的使用
+
+```html
+<body>
+
+  <script>
+    /* 
+    什么时候使用箭头函数?
+    一般在一个函数中套用另外一个函数时会使用
+     */
+    setTimeout(function () {
+      console.log(this); // window
+    }, 1000);
+    setTimeout(() => {
+      console.log(this); // window
+    }, 1000);
+
+    /* 
+    问题:箭头函数中的this时如何查找的？
+    答案:向外层作用域中，一层层查找this,直到有this的定义。
+    */
+    const obj = {
+      fun1() {
+        setTimeout(function () {
+          console.log(this); //window
+        });
+
+        setTimeout(() => {
+          console.log(this); //obj对象
+        })
+      }
+    }
+
+    const obj2 = {
+      fun1() {
+        setTimeout(function () {
+          setTimeout(function () {
+            console.log(this); //window
+          })
+
+          setTimeout(() => {
+            console.log(this); //window
+          })
+
+        })
+
+        setTimeout(() => {
+          setTimeout(function () {
+            console.log(this); //window
+          })
+
+          setTimeout(() => {
+            console.log(this); //obj对象
+          })
+        })
+      }
+    }
+  </script>
+
+
+</body>
+```
+
+
+
 
 
 
