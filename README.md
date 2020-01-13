@@ -1802,7 +1802,7 @@ console.log(total);
         cpn
       },
       methods:{
-        // 接受子组件传递过来的item
+        // 接收子组件传递过来的item
         cpnClick(item){
           console.log('aa',item);
         }
@@ -2069,7 +2069,7 @@ console.log(total);
     <cpn>
       <!-- 在需要替换的标签上指定slot的名字 -->
       <h2 slot="left">替换左边内容</h2>
-      <h2 slot="right">替换右边边内容</h2>
+      <h2 slot="right">替换右边内容</h2>
     </cpn>
     
   </div>
