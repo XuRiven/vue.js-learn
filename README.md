@@ -2843,11 +2843,368 @@ export default {
 
 
 
+# 15.vue-router详解
+
+## 15.1. 01-认识路由
+
+**后端路由阶段**
+
+* 早期的网站开发整个HTML页面是由服务器来渲染的。
+  * 服务器直接生产渲染好对应的HTML页面, 返回给客户端进行展示。
+* 但是, 一个网站, 这么多页面服务器如何处理呢?
+  * 一个页面有自己对应的网址, 也就是URL.
+  * URL会发送到服务器, 服务器会通过正则对该URL进行匹配, 并且最后交给一个Controller进行处理.
+  * Controller进行各种处理, 最终生成HTML或者数据, 返回给前端.
+  * 这就完成了一个IO操作。
+* 上面的这种操作, 就是后端路由.
+  * 当我们页面中需要请求不同的路径内容时, 交给服务器来进行处理, 服务器渲染好整个页面, 并且将页面返回给客户端
+  * 这种情况下渲染好的页面, 不需要单独加载任何的js和css, 可以直接交给浏览器展示, 这样也有利于SEO的优化.
+* 后端路由的缺点:
+  * 一种情况是整个页面的模块由后端人员来编写和维护的.
+  * 另一种情况是前端开发人员如果要开发页面, 需要通过PHP和Java等语言来编写页面代码.
+  * 而且通常情况下HTML代码和数据以及对应的逻辑会混在一起, 编写和维护都是非常糟糕的事情.
+
+**前端路由阶段**
+
+* 前后端分离阶段：
+  * 随着Ajax的出现, 有了前后端分离的开发模式.
+  * 后端只提供API来返回数据, 前端通过Ajax获取数据, 并且可以通过JavaScript将数据渲染到页面中.
+  * 这样做最大的优点就是前后端责任的清晰, 后端专注于数据上, 前端专注于交互和可视化上.
+  * 并且当移动端(iOS/Android)出现后, 后端不需要进行任何处理, 依然使用之前的一套API即可.
+  * 目前很多的网站依然采用这种模式开发.
+* 单页面富应用阶段:
+  * 其实SPA最主要的特点就是在前后端分离的基础上加了一层前端路由.
+  * 也就是前端来维护一套路由规则.
+* 前端路由的核心是什么呢？
+  * 改变URL，但是页面不进行整体的刷新
 
 
 
+# 15.2. 02-认识vue-router
+
+**安装和使用vue-router**
+
+* 因为我们已经学习了webpack, 后续开发中我们主要是通过工程化的方式进行开发的.
+  * 所以在后续, 我们直接使用npm来安装路由即可.
+  * 步骤一: 安装vue-router
+    * npm install vue-router --save
+  * 步骤二: 在模块化工程中使用它(因为是一个插件, 所以可以通过Vue.use()来安装路由功能)
+    * 第一步：导入路由对象，并且调用 Vue.use(VueRouter)
+    * 第二步：创建路由实例，并且传入路由映射配置
+    * 第三步：在Vue实例中挂载创建的路由实例
+* 使用vue-router的步骤:
+  * 第一步: 创建路由组件
+  * 第二步: 配置路由映射: 组件和路径映射关系
+  * 第三步: 使用路由: 通过<router-link>和<router-view>
 
 
+
+**创建router实例index.js**
+
+```js
+//配置路由相关信息
+import VueRouter from 'vue-router'
+import Vue from 'vue'
+
+
+// import Home from '../components/Home';
+// import About from '../components/About';
+// import User from '../components/User';
+
+//通过懒加载方式导入
+const Home = () => import('../components/Home')
+const About = () => import('../components/About')
+const User = () => import('../components/User')
+const HomeNews = () => import('../components/HomeNews')
+const HomeMessage = () => import('../components/HomeMessage')
+const Profile = () => import('../components/Profile')
+
+// 1.通过Vue.use(插件)，安装插件
+Vue.use(VueRouter)
+
+// 2.创建VueRouter对象,配置映射关系
+const routes = [
+
+  {
+    // 设置路由的默认路径
+    path: '',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
+    component: Home,
+    children:[
+      {
+        path:'',
+        redirect: 'homeNews'
+      },
+      {
+        // 路由嵌套里的路径不需要加/
+        path:'homeNews',
+        component:HomeNews
+      },
+      {
+        path:'homeMessage',
+        component:HomeMessage
+      }
+    ]
+  },
+  {
+    path: '/about',
+    component: About
+  },
+  {
+    path: '/user/:userId',
+    component: User
+  },
+  {
+    path:'/profile',
+    component:Profile
+  }
+]
+
+const router = new VueRouter({
+  // 配置路由和组件之间的应用关系
+  routes,
+
+  /* 
+    我们前面说过改变路径的方式有两种:
+    URL的hash
+    HTML5的history
+    默认情况下, 路径的改变使用的URL的hash.
+    如果希望使用HTML5的history模式, 非常简单, 进行如下配置即可:  
+  */
+  mode: 'history',
+  linkActiveClass: 'active'
+})
+
+// 3.将router对象传入到Vue实例
+export default router
+
+```
+
+**挂载到Vue实例中main.js**
+
+```js
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+
+Vue.config.productionTip = false
+
+
+new Vue({
+  el: '#app',
+  router,
+  render: h => h(App)
+})
+
+```
+
+**创建路由组件**
+
+**about.vue**
+
+```vue
+<template>
+  <div>
+    <h2>关于</h2>
+    <p>kobe bryant</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name :'About'
+}
+</script>
+
+<style>
+
+</style>
+```
+
+**home.vue**
+
+```vue
+<template>
+  <div>
+    <h2>主页</h2>
+    <p>jordan</p>
+    <router-link to='/home/homeNews'>新闻</router-link>
+    <router-link to='/home/homeMessage'>消息</router-link>
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name :'Home'
+}
+</script>
+
+<style>
+
+</style>
+```
+
+**user.vue**
+
+```vue
+<template>
+  <div>
+    <h2>个人中心</h2>
+    <p>你好{{userId}}</p>
+    <p>你好{{$route.params.userId}}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name:'User',
+  computed: {
+    userId(){
+      return this.$route.params.userId  
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>
+```
+
+**homeMessage.vue**
+
+```vue
+<template>
+  <div>
+    <ul>
+      <li>你有一份权益待领取</li>
+      <li>送你一张5元兰博基尼抵用券</li>
+      <li>集齐五福可分2元</li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  name:'HomeMessage'
+}
+</script>
+
+```
+
+**homeNews.vue**
+
+```vue
+<template>
+  <div>
+    <ul>
+      <li>布克39分</li>
+      <li>许尔特准绝杀</li>
+      <li>弗兰西斯出售豪宅</li>
+      <li>开拓者国王交易</li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  name:'HomeNews'
+}
+</script>
+
+```
+
+**Profile.vue**
+
+```vue
+<template>
+  <div>
+    <h2>我是Profile</h2>
+    <h2>{{$route.query.name}}</h2>
+    <h2>{{$route.query.age}}</h2>
+    <h2>{{$route.query.height}}</h2>
+  </div>
+</template>
+
+<script>
+export default {
+  name:'Profile'
+}
+</script>
+
+```
+
+**使用路由**
+
+```vue
+<template>
+  <div id="app">
+    <!-- router-link:
+    该标签是一个vue-router中已经内置的组件, 它会被默认渲染成一个<a>标签. 
+
+    <roter-link>还有其他一些属性:
+    1.tag: tag可以指定<router-link>之后渲染成什么组件, 比如上面的代码会被渲染成一个<button>元素, 而不是<a>
+    2.replace: replace不会留下history记录, 所以指定replace的情况下, 后退键返回不能返回到上一个页面中
+    3.active-class: 当<router-link>对应的路由匹配成功时, 会自动给当前元素设置一个router-link-active的class,
+    -->
+
+    <router-link to="/home" tag="button" replace>首页</router-link>
+    <router-link to="/about" tag="button" replace>关于</router-link>
+    <router-link :to="'/user/'+userId" tag="button">个人中心</router-link>
+
+    <!-- 通过:to传递参数 -->
+    <!-- <router-link :to="{path:'/profile',query:{name:'xuriven',age:23,height:'1.83m'}}" tag="button">档案</router-link> -->
+
+    <!-- 通过代码方式传递参数 -->
+    <button @click="profileClick">档案</button>
+
+    <!-- router-view:
+    该标签会根据当前的路径, 动态渲染出不同的组件.
+    -->
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      userId: "kobe"
+    };
+  },
+  methods: {
+    linkToHome() {
+      this.$router.push("/home");
+    },
+    linkToAbout() {
+      this.$router.push("/about");
+    },
+    profileClick() {
+      this.$router.push({
+        path: "/profile",
+        query: {
+          name: "xuriven",
+          age: "23",
+          height: "1.83m"
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style>
+.active {
+  color: red;
+}
+</style>
+
+```
 
 
 
