@@ -2880,7 +2880,7 @@ export default {
 
 
 
-# 15.2. 02-认识vue-router
+## 15.2. 02-认识vue-router
 
 **安装和使用vue-router**
 
@@ -3206,9 +3206,162 @@ export default {
 
 ```
 
+## 15.3. 03-导航守卫
 
+* 我们可以利用beforeEach来完成标题的修改.
+  * 首先, 我们可以在钩子当中定义一些标题, 可以利用meta来定义
+  * 其次, 利用导航守卫,修改我们的标题.
+* 导航钩子的三个参数解析:
+  * to: 即将要进入的目标的路由对象.
+  * from: 当前导航即将要离开的路由对象.
+  * next: 调用该方法后, 才能进入下一个钩子.
 
+```js
+// 1.通过Vue.use(插件)，安装插件
+Vue.use(VueRouter)
 
+// 2.创建VueRouter对象,配置映射关系
+const routes = [
+
+  {
+    // 设置路由的默认路径
+    path: '',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
+    component: Home,
+    // 定义标题
+    meta: {
+      title: '首页'
+    },
+    children: [{
+        path: '',
+        redirect: 'homeNews'
+      },
+      {
+        // 路由嵌套里的路径不需要加/
+        path: 'homeNews',
+        component: HomeNews
+      },
+      {
+        path: 'homeMessage',
+        component: HomeMessage
+      }
+    ]
+  },
+  {
+    path: '/about',
+    component: About,
+    meta: {
+      title: '关于'
+    }
+  },
+  {
+    path: '/user/:userId',
+    component: User,
+    meta: {
+      title: '个人中心'
+    }
+  },
+  {
+    path: '/profile',
+    component: Profile,
+    meta: {
+      title: '档案'
+    }
+  }
+]
+
+const router = new VueRouter({
+  // 配置路由和组件之间的应用关系
+  routes,
+  mode: 'history',
+  linkActiveClass: 'active'
+})
+
+// 前置守卫(guard)
+router.beforeEach((to, from, next) => {
+  // 从from跳转到to
+  document.title = to.matched[0].meta.title
+  // console.log('++++');
+  next()
+})
+
+// 后置钩子(hook)
+router.afterEach( route => {
+  // console.log('----');
+  
+})
+// 3.将router对象传入到Vue实例
+export default router
+```
+
+## 15.4. 04-keep-alive
+
+```vue
+<template>
+  <div id="app">
+    <router-link to="/home" tag="button" replace>首页</router-link>
+    <router-link to="/about" tag="button" replace>关于</router-link>
+    <router-link :to="'/user/'+userId" tag="button">个人中心</router-link>
+
+    <!-- 通过:to传递参数 -->
+    <!-- <router-link :to="{path:'/profile',query:{name:'xuriven',age:23,height:'1.83m'}}" tag="button">档案</router-link> -->
+
+    <!-- 通过代码方式传递参数 -->
+    <button @click="profileClick">档案</button>
+    <!-- 
+      keep-alive 是 Vue 内置的一个组件，可以使被包含的组件保留状态，或避免重新渲染。
+      它们有两个非常重要的属性:
+      include - 字符串或正则表达，只有匹配的组件会被缓存
+      exclude - 字符串或正则表达式，任何匹配的组件都不会被缓存,这里写的是Profile组件中export default		  的name
+      router-view 也是一个组件，如果直接被包在 keep-alive 里面，所有路径匹配到的视图组件都会被缓存：
+     -->
+    <keep-alive exclude="Profile">
+    <!-- router-view:该标签会根据当前的路径, 动态渲染出不同的组件.-->
+      <router-view/>
+    </keep-alive>
+    
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      userId: "kobe"
+    };
+  },
+  methods: {
+    linkToHome() {
+      this.$router.push("/home");
+    },
+    linkToAbout() {
+      this.$router.push("/about");
+    },
+    profileClick() {
+      this.$router.push({
+        path: "/profile",
+        query: {
+          name: "xuriven",
+          age: "23",
+          height: "1.83m"
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style>
+.active {
+  color: red;
+}
+</style>
+
+```
 
 
 
