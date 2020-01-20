@@ -101,13 +101,13 @@ next: 调用该方法后, 才能进入下一个钩子.
 router.beforeEach((to, from, next) => {
   // 从from跳转到to
   document.title = to.matched[0].meta.title
-  console.log('++++');
+  // console.log('++++');
   next()
 })
 
 // 后置钩子(hook)
 router.afterEach( route => {
-  console.log('----');
+  // console.log('----');
   
 })
 // 3.将router对象传入到Vue实例

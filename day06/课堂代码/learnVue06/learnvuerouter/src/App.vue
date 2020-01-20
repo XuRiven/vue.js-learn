@@ -19,10 +19,19 @@
     <!-- 通过代码方式传递参数 -->
     <button @click="profileClick">档案</button>
 
-    <!-- router-view:
-    该标签会根据当前的路径, 动态渲染出不同的组件.
-    -->
-    <router-view></router-view>
+
+    <!-- 
+      keep-alive 是 Vue 内置的一个组件，可以使被包含的组件保留状态，或避免重新渲染。
+      它们有两个非常重要的属性:
+      include - 字符串或正则表达，只有匹配的组件会被缓存
+      exclude - 字符串或正则表达式，任何匹配的组件都不会被缓存,这里写的是Profile.vue中export default的name
+      router-view 也是一个组件，如果直接被包在 keep-alive 里面，所有路径匹配到的视图组件都会被缓存：
+     -->
+    <keep-alive exclude="Profile">
+    <!-- router-view:该标签会根据当前的路径, 动态渲染出不同的组件.-->
+      <router-view/>
+    </keep-alive>
+    
   </div>
 </template>
 
