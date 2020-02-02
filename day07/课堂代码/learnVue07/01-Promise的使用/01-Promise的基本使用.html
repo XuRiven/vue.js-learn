@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+
+<script>
+
+  /* 
+  Promise异步操作之后会有三种状态
+  1.pending：等待状态，比如正在进行网络请求，或者定时器没有到时间。
+  2.fulfill：满足状态，当我们主动回调了resolve时，就处于该状态，并且会回调.then()
+  3.reject：拒绝状态，当我们主动回调了reject时，就处于该状态，并且会回调.catch()
+  */
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      //成功时使用resolve
+      resolve('hello world')
+
+      //失败时使用reject
+      reject('error message')
+    }, 1000);
+  }).then(data => {
+    console.log(data);
+  }).catch(err => {
+    console.log(err);
+  })
+
+  //Promise的另外处理形式
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Hello Vuejs')
+
+      reject('error message2')
+    }, 1000);
+  }).then(
+    data => {
+      console.log(data);
+    },
+    err => {
+      console.log(err);
+    }
+  )
+</script>
+
+</html>
