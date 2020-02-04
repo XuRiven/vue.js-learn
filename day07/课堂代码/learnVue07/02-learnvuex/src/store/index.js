@@ -8,6 +8,7 @@ import moudleA from './moudles/moudleA'
 // 1.安装插件
 Vue.use(Vuex)
 
+//单一状态树.Vuex 使用单一状态树,用一个对象就包含了全部的应用层级状态。至此它便作为一个“唯一数据源而存在。
 const state={ 
   counter: 1000,
   students: [{

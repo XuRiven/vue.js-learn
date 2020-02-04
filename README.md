@@ -2471,7 +2471,7 @@ module.exports={
 
   ```
 
-  ​
+  
 
   * 首先，会寻找本地的node_modules/.bin路径中对应的命令。
   * 如果没有找到，会去全局的环境变量中寻找。
@@ -3365,7 +3365,461 @@ export default {
 
 
 
+# 16.Promise的使用
 
+## 16.1. 01-Promise的基本使用
+
+```html
+<script>
+
+  /* 
+  Promise异步操作之后会有三种状态
+  1.pending：等待状态，比如正在进行网络请求，或者定时器没有到时间。
+  2.fulfill：满足状态，当我们主动回调了resolve时，就处于该状态，并且会回调.then()
+  3.reject：拒绝状态，当我们主动回调了reject时，就处于该状态，并且会回调.catch()
+  */
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      //成功时使用resolve
+      resolve('hello world')
+
+      //失败时使用reject
+      reject('error message')
+    }, 1000);
+  }).then(data => {
+    console.log(data);
+  }).catch(err => {
+    console.log(err);
+  })
+
+  //Promise的另外处理形式
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Hello Vuejs')
+
+      reject('error message2')
+    }, 1000);
+  }).then(
+    data => {
+      console.log(data);
+    },
+    err => {
+      console.log(err);
+    }
+  )
+</script>
+```
+
+## 16.2. 02-Promise的链式调用
+
+```html
+<script>
+  // 网络请求: aaa -> 自己处理(10行)
+  // 处理: aaa111 -> 自己处理(10行)
+  // 处理: aaa111222 -> 自己处理
+
+
+  /* 
+    new Promise((resolve,reject)=>{
+      setTimeout(() => {
+        resolve('kobe')
+      }, 1000);
+    }).then(res=>{
+      //1.自己处理10行代码
+      console.log(res,'第一层的10行处理代码');
+
+      //对结果进行第一次处理
+      return new Promise((resolve,reject)=>{
+        resolve(res+' bryant')
+      })
+    }).then(res=>{
+      console.log(res,'第二层的10行处理代码');
+      
+      //对结果进行第二次处理
+      return new Promise((resolve,reject)=>{
+        resolve(res+' Gigi')
+      })
+    }).then(res=>{
+      console.log(res,'第三层的10行处理代码');
+      
+    })
+     */
+
+  // new Promise(resolve => resolve(结果))简写
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('kobe')
+    }, 1000);
+  }).then(res => {
+    //1.自己处理10行代码
+    console.log(res, '第一层的10行处理代码');
+
+    //对结果进行第一次处理
+    return Promise.resolve(res + ' bryant')
+  }).then(res => {
+    console.log(res, '第二层的10行处理代码');
+
+    //对结果进行第二次处理
+    // return Promise.resolve(res+' Gigi')
+    throw 'Error Message'
+  }).then(res => {
+    console.log(res, '第三层的10行处理代码');
+  }).catch(err => {
+    console.log(err);
+  })
+</script
+```
+
+
+
+# 17.Vuex
+
+**Vuex是做什么的?**
+
+Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。
+
+* 它采用 集中式存储管理 应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
+* Vuex 也集成到 Vue 的官方调试工具 devtools extension，提供了诸如零配置的 time-travel 调试、状态快照导入导出等高级调试功能。
+
+
+
+
+
+**App.vue**
+
+```vue
+<template>
+  <div id="app">
+    <h2>-----------App内容:moudle中的内容--------------</h2>
+    <!-- 拿moudle里的属性 -->
+    <h2>{{$store.state.a.name}}</h2>
+    <!-- 调用moudle里的mutations -->
+    <button @click="updateName">修改名字</button>
+    <!-- 调用moudle里的getters -->
+    <h2>{{$store.getters.fullName}}</h2>
+    <h2>{{$store.getters.fullName2}}</h2>
+    <h2>{{$store.getters.fullName3}}</h2>
+    <!-- 调用moudle中的actions -->
+    <button @click="asyncUpdateName">异步修改名字</button>
+
+
+    <h2>-----------App内容:info对象的内容是否是响应式--------------</h2>
+    <h2>{{$store.state.info}}</h2>
+    <button @click="updateInfo">修改信息</button>
+    <h2>-----------App内容--------------</h2>
+    <!-- 通过$store.state拿到Vuex中的counter -->
+    <h2>{{$store.state.counter}}</h2>
+    <button @click="add">+</button>
+    <button @click="sub">-</button>
+    <button @click="addCount(5)">+5</button>
+    <button @click="addCount(10)">+10</button>
+    <button @click="addStudent()">添加学生</button>
+
+    <h2>-----------App内容:getters相关信息--------------</h2>
+    <h2>{{$store.getters.powerCounter}}</h2>
+    <h2>{{$store.getters.greateAges}}</h2>
+    <h2>{{$store.getters.greateAgesCount}}</h2>
+    <h2>{{$store.getters.moreAgeStu(30)}}</h2>
+
+    <h2>-----------HelloVuex内容--------------</h2>
+    <hello-vuex />
+  </div>
+</template>
+
+<script>
+import HelloVuex from "./components/HelloVuex";
+import {
+  INCREMENT,
+  DECREMENT,
+  INCREMENTCOUNT,
+  ADDSTUDENT,
+  UPDATEINFO
+} from "./store/mutations-types";
+export default {
+  name: "App",
+  data() {
+    return {
+      message: "kobe bryant"
+    };
+  },
+  //引用组件
+  components: {
+    HelloVuex
+  },
+  methods: {
+    add() {
+      //通过$store.commit方法调用Vuex中的increment方法
+      this.$store.commit(INCREMENT);
+    },
+    sub() {
+      this.$store.commit(DECREMENT);
+    },
+    addCount(count) {
+      // 1.普通的提交风格
+      // this.$store.commit('incrementCount',count)
+
+      // 2.特殊的提交风格
+      this.$store.commit({
+        type: INCREMENTCOUNT,
+        count
+      });
+    },
+
+    addStudent() {
+      const stu = { id: 5, name: "jordan", age: 50 };
+      this.$store.commit(ADDSTUDENT, stu);
+    },
+    updateInfo() {
+      // 调用Vuex中mutations方法(同步)  this.$store.commit
+      // this.$store.commit(UPDATEINFO)
+
+      // 调用Vuex中actions方法(异步)   this.$store.dispatch
+      this.$store.dispatch("aUpdateInfo", "我是携带信息").then(res => {
+        console.log("里面已经完成提交");
+        console.log(res);
+      });
+    },
+    updateName(){
+      this.$store.commit('updateName','gigi')
+    },
+    asyncUpdateName(){
+      this.$store.dispatch('aUpdateName')
+    }
+  }
+};
+</script>
+
+<style>
+</style>
+
+```
+
+
+
+**main.js**
+
+```js
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import store from './store'
+Vue.config.productionTip = false
+
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  store,
+  render: h => h(App)
+})
+
+```
+
+
+
+**store/index.js**
+
+```js
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
+import moudleA from './moudles/moudleA'
+// 1.安装插件
+Vue.use(Vuex)
+
+//单一状态树.Vuex 使用单一状态树,用一个对象就包含了全部的应用层级状态。至此它便作为一个“唯一数据源而存在。
+const state={ 
+  counter: 1000,
+  students: [{
+      id: 1,
+      name: 'xuriven',
+      age: 23
+    },
+    {
+      id: 2,
+      name: 'curry',
+      age: 18
+    },
+    {
+      id: 3,
+      name: 'kobe',
+      age: 24
+    },
+    {
+      id: 4,
+      name: 'james',
+      age: 34
+    },
+  ],
+  info:{
+    name:'Gigi',
+    age:14,
+    address:'losAngle'
+  }
+}
+
+// 2.创建插件(这里的Store一定要大写)
+const store = new Vuex.Store({
+  state,
+  mutations,
+  actions,
+  getters,
+  modules: {
+    a:moudleA
+  }
+})
+
+// 3.导出
+export default store
+
+```
+
+
+
+**mutations.js**
+
+```js
+/* 
+更改 Vuex 的 store 中的状态的唯一方法是提交 mutation。
+Vuex 中的 mutation 非常类似于事件：每个 mutation 都有一个字符串的 事件类型 (type) 和 一个 回调函数 (handler)。
+这个回调函数就是我们实际进行状态更改的地方，并且它会接受 state 作为第一个参数：
+*/
+import {
+  INCREMENT,
+  DECREMENT,
+  INCREMENTCOUNT,
+  ADDSTUDENT,
+  UPDATEINFO
+}from './mutations-types'
+export default {
+    [INCREMENT](state) {
+      state.counter++
+    },
+    [DECREMENT](state) {
+      state.counter--
+    },
+
+    // 1.普通的提交风格
+    // incrementCount(state,count){
+    //   state.counter+=count
+    // },
+
+    // 2.特殊的提交风格
+    [INCREMENTCOUNT](state,payload){
+      state.counter+=payload.count
+    },
+    [ADDSTUDENT](state,stu){
+      state.students.push(stu)
+    },
+    [UPDATEINFO](state){
+      Vue.set(state.info,'sex','female')
+      Vue.delete(state.info,'age')
+    }
+  }
+```
+
+**mutations-types.js**
+
+```js
+export const INCREMENT='increment'
+export const DECREMENT='decrement'
+export const INCREMENTCOUNT='incrementCount'
+export const ADDSTUDENT='addStudent'
+export const UPDATEINFO='updateInfo'
+
+```
+
+**actions.js**
+
+```js
+/* 
+Action 类似于 mutation，不同在于：
+Action 提交的是 mutation，而不是直接变更状态。
+Action 可以包含任意异步操作。
+*/
+export default{
+    aUpdateInfo(context,payload){
+      return new Promise((reslove,reject)=>{
+        setTimeout(() => {
+          context.commit(UPDATEINFO);
+          reslove('kobe')
+        }, 1000);
+      })
+    }
+}
+```
+
+**getters.js**
+
+```js
+/* 
+有时候我们需要从 store 中的 state 中派生出一些状态，例如对列表进行过滤并计数：
+Vuex 允许我们在 store 中定义“getter”（可以认为是 store 的计算属性）。
+就像计算属性一样，getter 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。
+*/
+export default{
+    powerCounter(state) {
+      return state.counter * state.counter
+    },
+    greateAges(state) {
+      return state.students.filter(s => s.age >= 20)
+    },
+    greateAgesCount(state, getters) {
+      return getters.greateAges.length
+    },
+    moreAgeStu(state) {
+      // return function (age) {
+      //   return state.students.filter(s=>s.age>age)
+      // }
+      return age => {
+        return state.students.filter(s => s.age > age)
+      }
+  }
+}
+```
+
+**moudles/moudleA.js**
+
+```js
+/* 
+由于使用单一状态树，应用的所有状态会集中到一个比较大的对象。当应用变得非常复杂时，store 对象就有可能变得相当臃肿。
+为了解决以上问题，Vuex 允许我们将 store 分割成模块（module）。
+每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块——从上至下进行同样方式的分割：
+*/
+export default {
+    state:{
+      name:'tmac'
+    },
+    mutations: {
+      updateName(state,payload){
+        state.name=payload
+      }
+    },
+    getters: {
+      fullName(state){
+        return state.name+' bryant'
+      },
+      fullName2(state,getters){
+        return getters.fullName+' miss you'
+      },
+  
+      //moudle中调用store中state的属性 
+      fullName3(state,getters,rootState){
+        return getters.fullName2 +rootState.counter
+      } 
+    },
+    actions: {
+      aUpdateName(context){
+        setTimeout(() => {
+          context.commit('updateName','DMY')
+        }, 1000);
+      }
+    }
+  }
+```
 
 
 
