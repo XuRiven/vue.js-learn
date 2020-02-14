@@ -56,6 +56,9 @@ export default {
     // (默认只加载一次，如果需要下拉更多需要调用finish函数)
     finishPullUp() {
       this.scroll && this.scroll.finishPullUp();
+    },
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
     }
   }
 };

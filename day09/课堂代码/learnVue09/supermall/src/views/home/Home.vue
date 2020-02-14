@@ -3,7 +3,13 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <tab-control @tabClick="tabClick" :titles="['流行','新款','精选']" ref="tabControl1" class="tab-control" v-show="isTabFlex" />
+    <tab-control
+      @tabClick="tabClick"
+      :titles="['流行','新款','精选']"
+      ref="tabControl1"
+      class="tab-control"
+      v-show="isTabFlex"
+    />
     <Scroll
       class="content"
       ref="scroll"
@@ -15,7 +21,7 @@
       <home-swiper @swiperImageLoad="swiperImageLoad" :banners="banners" />
       <recommend-view :recommends="recommends" />
       <feature-view />
-      <tab-control @tabClick="tabClick" :titles="['流行','新款','精选']" ref="tabControl2"  />
+      <tab-control @tabClick="tabClick" :titles="['流行','新款','精选']" ref="tabControl2" />
       <goods-list :goods="showGoods"></goods-list>
     </Scroll>
     <back-top @click.native="btnClick" v-show="isShow" />
@@ -59,7 +65,8 @@ export default {
       currentType: "pop",
       isShow: false,
       offsetTop: 0,
-      isTabFlex: false
+      isTabFlex: false,
+      saveY:0,
     };
   },
   created() {
@@ -69,6 +76,15 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+  },
+  // 进入组件时调用的函数
+  activated() {
+    this.$refs.scroll.scrollTo(0,this.saveY,0)
+    this.$refs.scroll.refresh()
+  },
+  // 离开组件时调用的函数
+  deactivated() {
+    this.saveY=this.$refs.scroll.getScrollY()
   },
   mounted() {
     // 3.监听item中图片加载完成
@@ -94,8 +110,8 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabControl1.currentIndex=index
-      this.$refs.tabControl2.currentIndex=index
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     btnClick() {
       this.$refs.scroll.scrollTo(0, 0);
@@ -166,14 +182,14 @@ export default {
   left: 0;
   right: 0;
 }
-.fixed{
+.fixed {
   position: fixed;
   left: 0;
   right: 0;
   top: 44px;
 }
 
-.tab-control{
+.tab-control {
   position: relative;
   z-index: 9;
 }
