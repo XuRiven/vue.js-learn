@@ -10,7 +10,6 @@
       :probe-type="3"
       :pull-up-load="true"
       @scroll="contentScroll"
-      @pullingUp="loadMore"
     >
       <home-swiper :banners="banners" />
       <recommend-view :recommends="recommends" />
@@ -66,6 +65,12 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+
+    // 3.监听item中图片加载完成
+    // $bus是在main.js中加的原型 Vue.prototype.$bus=new Vue()
+    this.$bus.$on('itemmImageLoad',()=>{
+      this.$refs.scroll.refresh();
+    })
   },
   methods: {
     /* 
@@ -91,9 +96,6 @@ export default {
       this.isShow = -position.y > 1000;
     },
 
-    loadMore(){
-      this.getHomeGoods(this.currentType)
-    },
     /* 
       网络请求相关方法
     */
@@ -112,7 +114,6 @@ export default {
         );
         this.goods[type].page += 1;
 
-        this.$refs.scroll.finishPullUp();
       });
     }
   },

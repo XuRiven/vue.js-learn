@@ -20,17 +20,12 @@ export default {
       type:Number,
       default:0
     },
-    pullUpLoad:{
-      type:Boolean,
-      default:false
-    }
   },
   mounted () {
     // 1.创建BScroll对象
     this.scroll=new BScroll(this.$refs.wrapper,{
       probeType:this.probeType,
       click:true,
-      pullUpLoad:this.pullUpLoad
     })
 
     // 2.监听滚动的位置
@@ -39,9 +34,6 @@ export default {
     })
 
     // 3.监听上拉事件
-    this.scroll.on('pullingUp',()=>{
-      this.$emit('pullingUp')
-    })
   },
   methods: {
     scrollTo(x,y,time=300){
@@ -49,6 +41,9 @@ export default {
     },
     finishPullUp(){
       this.scroll.finishPullUp();
+    },
+    refresh(){
+      this.scroll.refresh();
     }
   }
 }
