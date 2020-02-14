@@ -13,7 +13,7 @@
     >
       <home-swiper :banners="banners" />
       <recommend-view :recommends="recommends" />
-      <feature-view/>
+      <feature-view />
       <tab-control @tabClick="tabClick" class="tab-control" :titles="['流行','新款','精选']"></tab-control>
       <goods-list :goods="showGoods"></goods-list>
     </Scroll>
@@ -32,6 +32,7 @@ import GoodsList from "components/content/goods/GoodsList";
 import Scroll from "components/common/scroll/Scroll";
 import BackTop from "components/content/backTop/BackTop";
 import { getHomeMultidata, getHomeGoods } from "network/home";
+import {debounce} from "common/utils"
 export default {
   name: "Home",
   components: {
@@ -65,17 +66,20 @@ export default {
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
-
+  },
+  mounted() {
     // 3.监听item中图片加载完成
     // $bus是在main.js中加的原型 Vue.prototype.$bus=new Vue()
-    this.$bus.$on('itemmImageLoad',()=>{
-      this.$refs.scroll.refresh();
-    })
+    const refresh=debounce(this.$refs.scroll.refresh)
+    this.$bus.$on("itemmImageLoad", () => {
+      refresh()
+    });
   },
   methods: {
-    /* 
-      事件监听相关方法
-    */
+    //事件监听相关方法
+
+    
+
     tabClick(index) {
       switch (index) {
         case 0:
@@ -113,7 +117,6 @@ export default {
           res.data.data.list
         );
         this.goods[type].page += 1;
-
       });
     }
   },

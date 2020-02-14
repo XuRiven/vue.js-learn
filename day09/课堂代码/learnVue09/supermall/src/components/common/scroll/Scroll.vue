@@ -7,49 +7,48 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import BScroll from "better-scroll";
 export default {
-  name:'Scroll',
-  data () {
+  name: "Scroll",
+  data() {
     return {
-      scroll:null
-    }
+      scroll: null
+    };
   },
   props: {
-    probeType:{
-      type:Number,
-      default:0
-    },
+    probeType: {
+      type: Number,
+      default: 0
+    }
   },
-  mounted () {
+  mounted() {
     // 1.创建BScroll对象
-    this.scroll=new BScroll(this.$refs.wrapper,{
-      probeType:this.probeType,
-      click:true,
-    })
+    this.scroll = new BScroll(this.$refs.wrapper, {
+      probeType: this.probeType,
+      click: true
+    });
 
     // 2.监听滚动的位置
-    this.scroll.on('scroll',(position)=>{
-      this.$emit('scroll',position)
-    })
+    this.scroll.on("scroll", position => {
+      this.$emit("scroll", position);
+    });
 
     // 3.监听上拉事件
   },
   methods: {
-    scrollTo(x,y,time=300){
-      this.scroll.scrollTo(x,y,time)
+    // 首先判断是否有scroll对象，如果有在执行后面函数
+    scrollTo(x, y, time = 300) {
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
-    finishPullUp(){
-      this.scroll.finishPullUp();
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp();
     },
-    refresh(){
-      this.scroll.refresh();
+    refresh() {
+      this.scroll && this.scroll.refresh();
     }
   }
-}
+};
 </script>
 
 <style>
-
-
 </style>
