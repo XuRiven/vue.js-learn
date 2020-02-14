@@ -768,6 +768,9 @@
 
     <!--4. .once修饰符 按钮只有在第一次点击的时候会监听-->
     <button @click.once="onceClick">onceButton</button>
+    
+    <!--5. .native修饰符 监听组件根元素的原生事件-->
+    <back-top @click.native="btunClick"/>
   </div>
   <script>
     const app = new Vue({
@@ -2471,7 +2474,6 @@ module.exports={
 
   ```
 
-  
 
   * 首先，会寻找本地的node_modules/.bin路径中对应的命令。
   * 如果没有找到，会去全局的环境变量中寻找。

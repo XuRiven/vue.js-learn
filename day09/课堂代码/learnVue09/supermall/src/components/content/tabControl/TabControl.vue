@@ -1,6 +1,6 @@
 <template>
   <div class="tab-control">
-    <div class="tab-control-item" v-for="(item,index) in titles" 
+    <div class="tab-control-item" v-for="(item,index) in titles" :key="item"
          :class="{active:currentIndex==index}"
          @click="itemClick(index)"
     >
@@ -17,6 +17,7 @@ export default {
     titles: {
       type: Array,
       default() {
+        // 当返回的是对象或者是数组的时候都必须写成函数
         return [];
       }
     }
