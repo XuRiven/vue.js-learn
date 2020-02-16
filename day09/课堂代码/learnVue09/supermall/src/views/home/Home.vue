@@ -79,8 +79,9 @@ export default {
   },
   // 进入组件时调用的函数
   activated() {
-    this.$refs.scroll.scrollTo(0,this.saveY,0)
+    // 先刷新再回到顶部，这样detail里面点击返回就能回到当初位置，而不会回到顶部
     this.$refs.scroll.refresh()
+    this.$refs.scroll.scrollTo(0,this.saveY,0)
   },
   // 离开组件时调用的函数
   deactivated() {
