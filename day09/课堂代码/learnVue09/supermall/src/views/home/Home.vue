@@ -130,7 +130,7 @@ export default {
       this.offsetTop = this.$refs.tabControl2.$el.offsetTop;
     },
 
-    /* 
+    /*
       网络请求相关方法
     */
     getHomeMultidata() {

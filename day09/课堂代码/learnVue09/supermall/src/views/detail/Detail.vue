@@ -7,6 +7,8 @@
       <detail-shop-info :shop="shop"/>
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
       <detail-param-info :param-info="paramInfo"/>
+      <detail-comment-info  :comment-info="commentInfo"/>
+      <goods-list :goods="recommends"/>
     </scroll>
   </div>
 </template>
@@ -18,10 +20,11 @@
   import DetailShopInfo from "./childComps/DetailShopInfo";
   import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
   import DetailParamInfo from "./childComps/DetailParamInfo";
-
+  import DetailCommentInfo from "./childComps/DetailCommentInfo";
+  import GoodsList from "components/content/goods/GoodsList";
   import Scroll from "components/common/scroll/Scroll"
 
-  import {getDetail, Goods,GoodsParam} from "network/detail";
+  import {getDetail, Goods, GoodsParam,getRecommend} from "network/detail";
   import {Shop} from "../../network/detail";
 
   export default {
@@ -32,8 +35,10 @@
         topImages: [],
         goods: {},
         shop: {},
-        detailInfo:{},
-        paramInfo:{}
+        detailInfo: {},
+        paramInfo: {},
+        commentInfo: {},
+        recommends:[]
       };
     },
     components: {
@@ -43,10 +48,12 @@
       DetailBaseInfo,
       DetailShopInfo,
       DetailGoodsInfo,
+      DetailCommentInfo,
+      GoodsList,
       Scroll,
     },
-    methods:{
-      imageLoad(){
+    methods: {
+      imageLoad() {
         this.$refs.scroll.refresh();
       }
     },
@@ -55,7 +62,6 @@
       (this.iid = this.$route.params.iid),
         // 2.根据iid请求详情数据
         getDetail(this.iid).then(res => {
-          console.log(res);
           const data = res.data.result;
 
           //3.获取顶部的图片数据
@@ -68,10 +74,21 @@
           this.shop = new Shop(data.shopInfo)
 
           //6.获取商品详情信息
-          this.detailInfo=data.detailInfo
+          this.detailInfo = data.detailInfo
 
           //7.获取参数信息
-          this.paramInfo=new GoodsParam(data.itemParams.info, data.itemParams.rule);
+          this.paramInfo = new GoodsParam(data.itemParams.info, data.itemParams.rule);
+
+          //8.获取商品评论信息
+          if (data.rate.list) {
+            this.commentInfo = data.rate.list[0]
+          }
+        });
+
+        //3.请求推荐数据
+        getRecommend().then(res=>{
+          console.log(res)
+          this.recommends=res.data.data.list
         });
     }
   };
@@ -85,12 +102,13 @@
     height: 100vh;
   }
 
-  .detail-nav{
+  .detail-nav {
     position: relative;
     z-index: 9;
     background-color: #fff;
   }
-  .content{
+
+  .content {
     height: calc(100% - 44px);
   }
 </style>
