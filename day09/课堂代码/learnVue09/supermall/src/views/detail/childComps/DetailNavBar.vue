@@ -34,6 +34,7 @@ export default {
   methods: {
     btnClick(index) {
       this.currentIndex = index;
+      this.$emit("titleClick",index)
     },
     backClick(){
       this.$router.back()
@@ -55,6 +56,6 @@ export default {
   color: var(--color-high-text);
 }
 .back img{
-  margin-top: 13px 
+  margin-top: 13px
 }
 </style>

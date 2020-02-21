@@ -1,15 +1,16 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"/>
-    <scroll class="content" ref="scroll">
-      <detail-swiper :top-images="topImages"></detail-swiper>
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
+    <scroll class="content" ref="scroll" >
+      <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
-      <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad"/>
-      <detail-param-info :param-info="paramInfo"/>
-      <detail-comment-info  :comment-info="commentInfo"/>
-      <goods-list :goods="recommends"/>
+      <!--      <detail-goods-info :detail-info="detailInfo"  @detailImageLoad="detailImageLoad"/>-->
+      <detail-param-info ref="param" :param-info="paramInfo"/>
+      <detail-comment-info ref="comment" :comment-info="commentInfo"/>
+      <goods-list ref="recommdends" :goods="recommends"/>
     </scroll>
+    <detail-bottom-bar/>
   </div>
 </template>
 
@@ -22,13 +23,21 @@
   import DetailParamInfo from "./childComps/DetailParamInfo";
   import DetailCommentInfo from "./childComps/DetailCommentInfo";
   import GoodsList from "components/content/goods/GoodsList";
+  import DetailBottomBar from "./childComps/DetailBottomBar";
   import Scroll from "components/common/scroll/Scroll"
 
-  import {getDetail, Goods, GoodsParam,getRecommend} from "network/detail";
+  import {itemListenerMixin} from "common/mixin";
+  import {getDetail, Goods, GoodsParam, getRecommend} from "network/detail";
   import {Shop} from "../../network/detail";
 
   export default {
     name: "Detail",
+    /*
+    * 混入 (mixin) 提供了一种非常灵活的方式，
+    * 来分发 Vue 组件中的可复用功能。一个混入对象可以包含任意组件选项。
+    * 当组件使用混入对象时，所有混入对象的选项将被“混合”进入该组件本身的选项。
+    */
+    mixins: [itemListenerMixin],
     data() {
       return {
         iid: null,
@@ -38,7 +47,8 @@
         detailInfo: {},
         paramInfo: {},
         commentInfo: {},
-        recommends:[]
+        recommends: [],
+        themeTopYs: []
       };
     },
     components: {
@@ -50,16 +60,27 @@
       DetailGoodsInfo,
       DetailCommentInfo,
       GoodsList,
+      DetailBottomBar,
       Scroll,
     },
     methods: {
-      imageLoad() {
-        this.$refs.scroll.refresh();
+      detailImageLoad() {
+        this.newRefresh();
+
+        this.themeTopYs = [];
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.param.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.recommdends.$el.offsetTop);
+        console.log(this.themeTopYs);
+      },
+      titleClick(index) {
+        this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)
       }
     },
     created() {
       // 1.保存传入的id
-      (this.iid = this.$route.params.iid),
+      this.iid = this.$route.params.iid,
         // 2.根据iid请求详情数据
         getDetail(this.iid).then(res => {
           const data = res.data.result;
@@ -83,13 +104,30 @@
           if (data.rate.list) {
             this.commentInfo = data.rate.list[0]
           }
+
+          /*
+          $nextTick
+          将回调延迟到下次 DOM 更新循环之后执行。
+          在修改数据之后立即使用它，然后等待 DOM 更新。
+          它跟全局方法 Vue.nextTick 一样，不同的是回调的 this 自动绑定到调用它的实例上。
+          */
+          this.$nextTick(() => {
+            //根据最新数据，对于的DOM以及被渲染出来了，但图片依然没有加载完
+            //目前这个offsetTop是不包含图片的
+
+          })
         });
 
-        //3.请求推荐数据
-        getRecommend().then(res=>{
-          console.log(res)
-          this.recommends=res.data.data.list
-        });
+      //3.请求推荐数据
+      getRecommend().then(res => {
+        this.recommends = res.data.data.list
+      });
+    },
+    mounted() {
+      //通过mixin混入传进来
+    },
+    destroyed() {
+      this.$bus.$off("itemImageLoad", this.itemImgListener)
     }
   };
 </script>
