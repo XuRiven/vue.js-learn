@@ -1,7 +1,10 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
-    <scroll class="content" ref="scroll" >
+    <scroll class="content"
+            ref="scroll"
+            :probe-type="3"
+            @scroll="contentScroll">
       <detail-swiper :top-images="topImages"/>
       <detail-base-info :goods="goods"/>
       <detail-shop-info :shop="shop"/>
@@ -10,6 +13,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"/>
       <goods-list ref="recommdends" :goods="recommends"/>
     </scroll>
+    <back-top @click.native="btnClick" v-show="isShow"/>
     <detail-bottom-bar/>
   </div>
 </template>
@@ -24,6 +28,7 @@
   import DetailCommentInfo from "./childComps/DetailCommentInfo";
   import GoodsList from "components/content/goods/GoodsList";
   import DetailBottomBar from "./childComps/DetailBottomBar";
+  import BackTop from "components/content/backTop/BackTop";
   import Scroll from "components/common/scroll/Scroll"
 
   import {itemListenerMixin} from "common/mixin";
@@ -48,7 +53,8 @@
         paramInfo: {},
         commentInfo: {},
         recommends: [],
-        themeTopYs: []
+        themeTopYs: [],
+        isShow: false
       };
     },
     components: {
@@ -61,6 +67,7 @@
       DetailCommentInfo,
       GoodsList,
       DetailBottomBar,
+      BackTop,
       Scroll,
     },
     methods: {
@@ -76,6 +83,13 @@
       },
       titleClick(index) {
         this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)
+      },
+      btnClick() {
+        this.$refs.scroll.scrollTo(0, 0);
+      },
+      contentScroll(position) {
+        console.log(position)
+        this.isShow = position.y <= -100
       }
     },
     created() {
@@ -147,6 +161,6 @@
   }
 
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 49px);
   }
 </style>
