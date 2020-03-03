@@ -14,7 +14,7 @@
       <goods-list ref="recommdends" :goods="recommends"/>
     </scroll>
     <back-top @click.native="btnClick" v-show="isShow"/>
-    <detail-bottom-bar/>
+    <detail-bottom-bar @addToCart="addToCart"/>
   </div>
 </template>
 
@@ -88,8 +88,23 @@
         this.$refs.scroll.scrollTo(0, 0);
       },
       contentScroll(position) {
-        console.log(position)
         this.isShow = position.y <= -100
+      },
+      addToCart(){
+        //1.获取购物车需要展示的信息
+        const product={}
+        product.iid=this.iid
+        product.imgUrl=this.topImages[0]
+        product.title = this.goods.title
+        product.desc = this.goods.desc
+        product.price = this.goods.realPrice
+
+        //2.将商品添加到购物车
+        //this.$store.commit调用Vuex中的mutations里方法
+        // this.$store.commit('addCart',product)
+
+        //this.$store.dispatch调用Vuex中的actions里方法
+        this.$store.dispatch('addCart',product)
       }
     },
     created() {
