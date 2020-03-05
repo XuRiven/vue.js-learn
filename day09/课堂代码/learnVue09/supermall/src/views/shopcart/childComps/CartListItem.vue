@@ -34,7 +34,6 @@
     },
     methods:{
       checkClick(){
-        console.log(this.itemInfo.checked)
         this.itemInfo.checked=!this.itemInfo.checked
       }
     }

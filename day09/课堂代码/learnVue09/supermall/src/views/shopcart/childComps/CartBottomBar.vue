@@ -1,6 +1,7 @@
 <template>
   <div class="bottom-menu">
-    <CheckButton class="select-all"/>
+    <CheckButton :is-checked="isSelectAll"
+                 class="select-all" @click.native="checkClick"/>
     <span>全选</span>
     <span class="total-price">合计: ¥{{totalPrice}}</span>
     <span class="buy-product">去计算({{cartLength}})</span>
@@ -12,6 +13,12 @@
 
   export default {
     name: "CartBottomBar",
+    //组件里面data必须是一个函数
+    // data:function () {
+    //   return{
+    //     isSelect:true
+    //   }
+    // },
     components: {
       CheckButton
     },
@@ -25,6 +32,31 @@
       },
       cartLength(){
         return this.$store.state.cartList.filter(item => item.checked).length
+      },
+      isSelectAll(){
+        if (this.$store.state.cartList.length==0) return false
+        //1.使用filter
+        // return !(this.$store.state.cartList.filter(item => !item.checked).length)
+
+        //2.使用find(推荐)
+        return !(this.$store.state.cartList.find(item => !item.checked))
+
+        //3.普通遍历
+        /*for (let item of this.$store.state.cartList){
+          if (!item.checked){
+            return false
+          }
+        }
+        return true*/
+      }
+    },
+    methods: {
+      checkClick() {
+       if(this.isSelectAll){
+         this.$store.state.cartList.forEach(item => item.checked=false)
+       }else {
+         this.$store.state.cartList.forEach(item => item.checked=true)
+       }
       }
     }
   }
