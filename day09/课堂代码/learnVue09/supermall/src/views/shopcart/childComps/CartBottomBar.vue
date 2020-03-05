@@ -4,7 +4,7 @@
                  class="select-all" @click.native="checkClick"/>
     <span>全选</span>
     <span class="total-price">合计: ¥{{totalPrice}}</span>
-    <span class="buy-product">去计算({{cartLength}})</span>
+    <span class="buy-product" @click="calcClick">去计算({{cartLength}})</span>
   </div>
 </template>
 
@@ -57,6 +57,15 @@
        }else {
          this.$store.state.cartList.forEach(item => item.checked=true)
        }
+      },
+      calcClick(){
+        if (this.$store.state.cartList.length==0) return this.$toast.show('您还没有选择商品哦',2000)
+        for(let item of this.$store.state.cartList){
+          if (item.checked){
+            return false;
+          }
+        }
+        this.$toast.show('您还没有选择商品哦',2000)
       }
     }
   }

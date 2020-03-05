@@ -32,8 +32,13 @@
   import Scroll from "components/common/scroll/Scroll"
 
   import {itemListenerMixin} from "common/mixin";
+  //从vuex中导入actions里面方法
   import {getDetail, Goods, GoodsParam, getRecommend} from "network/detail";
   import {Shop} from "../../network/detail";
+
+  import {mapActions} from 'vuex'
+
+
 
   export default {
     name: "Detail",
@@ -71,6 +76,7 @@
       Scroll,
     },
     methods: {
+      ...mapActions(['addCart']),
       detailImageLoad() {
         this.newRefresh();
 
@@ -104,7 +110,12 @@
         // this.$store.commit('addCart',product)
 
         //this.$store.dispatch调用Vuex中的actions里方法
-        this.$store.dispatch('addCart',product)
+        this.addCart(product).then(res =>{
+          this.$toast.show()
+        })
+        /*this.$store.dispatch('addCart',product).then(res =>{
+          console.log(res)
+        })*/
       }
     },
     created() {
